@@ -1,8 +1,8 @@
 // 모든 유저 조회
 async function selectUser(connection) {
   const selectUserListQuery = `
-                SELECT email, nickname 
-                FROM UserInfo;
+                SELECT phonenum, nickname 
+                FROM user;
                 `;
   const [userRows] = await connection.query(selectUserListQuery);
   return userRows;
@@ -19,12 +19,24 @@ async function selectUserEmail(connection, email) {
   return emailRows;
 }
 
+// 번호로 회원 조회
+async function selectUserPhonenum(connection, phonenum) {
+  const selectUserPhonenumQuery = `
+                SELECT phonenum, nickname 
+                FROM user 
+                WHERE phonenum = ?;
+                `;
+  const [phonenumRows] = await connection.query(selectUserPhonenumQuery, phonenum);
+  return phonenumRows;
+}
+
+
 // userId 회원 조회
 async function selectUserId(connection, userId) {
   const selectUserIdQuery = `
-                 SELECT id, email, nickname 
-                 FROM UserInfo 
-                 WHERE id = ?;
+                 SELECT idx, phonenum, nickname 
+                 FROM user 
+                 WHERE idx = ?;
                  `;
   const [userRow] = await connection.query(selectUserIdQuery, userId);
   return userRow;
@@ -33,8 +45,8 @@ async function selectUserId(connection, userId) {
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
-        INSERT INTO UserInfo(email, password, nickname)
-        VALUES (?, ?, ?);
+        INSERT INTO user(phonenum, nickname)
+        VALUES (?, ?);
     `;
   const insertUserInfoRow = await connection.query(
     insertUserInfoQuery,
@@ -73,11 +85,20 @@ async function selectUserAccount(connection, email) {
 
 async function updateUserInfo(connection, id, nickname) {
   const updateUserQuery = `
-  UPDATE UserInfo 
+  UPDATE user 
   SET nickname = ?
-  WHERE id = ?;`;
+  WHERE idx = ?;`;
   const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
   return updateUserRow[0];
+}
+
+async function deleteUserInfo(connection, id) {
+  const deleteUserQuery = `
+  DELETE
+  FROM user
+  WHERE idx = ?;`;
+  const deleteUserRow = await connection.query(deleteUserQuery, [id]);
+  return deleteUserRow[0];
 }
 
 
@@ -89,4 +110,6 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
+  selectUserPhonenum,
+  deleteUserInfo
 };

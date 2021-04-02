@@ -13,20 +13,20 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
+exports.createUser = async function (phonenum, nickname) {
     try {
-        // 이메일 중복 확인
-        const emailRows = await userProvider.emailCheck(email);
-        if (emailRows.length > 0)
-            return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
+        // 번호 중복 확인
+        const phoneumRows = await userProvider.phonenumCheck(phonenum);
+        if (phoneumRows.length > 0)
+            return errResponse(baseResponse.SIGNUP_REDUNDANT_PHONENUM);
 
         // 비밀번호 암호화
-        const hashedPassword = await crypto
-            .createHash("sha512")
-            .update(password)
-            .digest("hex");
+        // const hashedPassword = await crypto
+        //     .createHash("sha512")
+        //     .update(password)
+        //     .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, nickname];
+        const insertUserInfoParams = [phonenum, nickname];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
@@ -107,6 +107,29 @@ exports.editUser = async function (id, nickname) {
 
     } catch (err) {
         logger.error(`App - editUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.deleteUser = async function (id) {
+    try {
+        // ID로 회원 조회
+        const userIdRows = await userProvider.retrieveUser(id);
+        if (userIdRows.length == 0)
+            return errResponse(baseResponse.USER_USERID_NOT_EXIST);
+
+        const deleteUserInfoParams = [id];
+
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const userIdResult = await userDao.deleteUserInfo(connection, deleteUserInfoParams);
+        console.log(`삭제 성공`)
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+
+    } catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }

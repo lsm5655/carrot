@@ -32,9 +32,39 @@ module.exports = {
 
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
+    SIGNUP_PHONENUM_EMPTY : {"isSuccess": false, "code" : 2019, "message": "번호를 입력해주세요."},
+    SIGNUP_PHONENUM_LENGTH : {"isSuccess": false, "code" : 2020, "message": "번호를 11자리로 입력해주세요."},
+    SIGNUP_PHONENUM_ERROR_TYPE : {"isSuccess": false, "code" : 2021, "message": "번호를 형식을 정확하게 입력해주세요."},
+
+    DONGNAME_EMPTY : {"isSuccess": false, "code" : 2022, "message": "동이름을 입력해주세요."},
+    RANGE_EMPTY : {"isSuccess": false, "code" : 2023, "message": "범위를 입력해주세요."},
+
+    CATEGORY_CATEGORYID_EMPTY : { "isSuccess": false, "code": 2024, "message": "categoryId를 입력해주세요." },
+    CATEGORY_CATEGORYNAME_EMPTY : { "isSuccess": false, "code": 2024, "message": "category이름을 입력해주세요." },
+    CATEGORY_CATEGORYID_NOT_EXIST : { "isSuccess": false, "code": 2024, "message": "해당 categoryID가 존재하지 않습니다." },
+
+    GOODS_GOODSID_EMPTY : { "isSuccess": false, "code": 2025, "message": "goodsId를 입력해주세요." },
+    GOODS_GOODSID_NOT_EXIST : { "isSuccess": false, "code": 2026, "message": "해당 goodsID가 존재하지 않습니다." },
+    GOODS_SELLERLOCATIONID_EMPTY : { "isSuccess": false, "code": 2027, "message": "sellerlocationId를 입력해주세요." },
+    GOODS_GOODSTITLE_EMPTY : { "isSuccess": false, "code": 2028, "message": "상품제목을 입력해주세요." },
+    GOODS_PRICE_EMPTY : { "isSuccess": false, "code": 2029, "message": "상품가격을 입력해주세요. }"},
+    GOODS_ISPRICEOFFER_EMPTY : { "isSuccess": false, "code": 2030, "message": "가격제안여부를 입력해주세요." },
+    GOODS_CONTENT_EMPTY : { "isSuccess": false, "code": 2031, "message": "내용을 입력해주세요." },
+
+    NOTICE_TYPE_EMPTY : { "isSuccess": false, "code": 2032, "message": "알림 종류를 입력해주세요." },
+    NOTICE_ID_EMPTY : { "isSuccess": false, "code": 2033, "message": "알림 ID를 입력해주세요." },
+
+    KEYWORD_NAME_EMPTY : { "isSuccess": false, "code": 2034, "message": "키워드를 입력해주세요." },
+    KEYWORD_ID_EMPTY : { "isSuccess": false, "code": 2035, "message": "키워드 ID를 입력해주세요." },
+
+    REVIEW_CONTENT_EMPTY : { "isSuccess": false, "code": 2036, "message": "후기 내용을 입력해주세요." },
+
+    
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
+    SIGNUP_REDUNDANT_PHONENUM : { "isSuccess": false, "code": 3007, "message":"중복된 번호입니다." },
+    SIGNUP_REDUNDANT_CATEGORYNAME : { "isSuccess": false, "code": 3007, "message":"중복된 카테고리 이름입니다." },
 
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },
     SIGNIN_PASSWORD_WRONG : { "isSuccess": false, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },

@@ -5,8 +5,8 @@ const userDao = require("./userDao");
 
 // Provider: Read 비즈니스 로직 처리
 
-exports.retrieveUserList = async function (email) {
-  if (!email) {
+exports.retrieveUserList = async function (phonenum) {
+  if (!phonenum) {
     const connection = await pool.getConnection(async (conn) => conn);
     const userListResult = await userDao.selectUser(connection);
     connection.release();
@@ -15,7 +15,7 @@ exports.retrieveUserList = async function (email) {
 
   } else {
     const connection = await pool.getConnection(async (conn) => conn);
-    const userListResult = await userDao.selectUserEmail(connection, email);
+    const userListResult = await userDao.selectUserPhonenum(connection, phonenum);
     connection.release();
 
     return userListResult;
@@ -55,4 +55,12 @@ exports.accountCheck = async function (email) {
   connection.release();
 
   return userAccountResult;
+};
+
+exports.phonenumCheck = async function (phonenum) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const phoenumCheckResult = await userDao.selectUserPhonenum(connection, phonenum);
+  connection.release();
+
+  return phoenumCheckResult;
 };
