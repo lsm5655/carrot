@@ -1,8 +1,8 @@
 const {logger} = require("../../../config/winston");
 const {pool} = require("../../../config/database");
 const secret_config = require("../../../config/secret");
-const reviewProvider = require("./reviewProvider");
-const reviewDao = require("./reviewDao");
+const chatroomProvider = require("./chatroomProvider");
+const chatroomDao = require("./chatroomDao");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -14,42 +14,42 @@ const {connect} = require("http2");
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
 //후기 생성
-exports.createReview = async function (userId, goodsId, content) {
+exports.createChatroom = async function (goodsId, buyerId) {
     try {
         
-        const insertReviewParams = [userId, goodsId, content];
+        const insertChatroomParams = [goodsId, buyerId];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
-        const reviewResult = await reviewDao.insertReview(connection, insertReviewParams);
-        console.log(`추가된 회원 : ${reviewResult[0]}`)
+        const chatroomResult = await chatroomDao.insertChatroom(connection, insertChatroomParams);
+        console.log(`추가된 회원 : ${chatroomResult[0]}`)
         connection.release();
         return response(baseResponse.SUCCESS);
 
 
     } catch (err) {
-        logger.error(`App - createReview Service error\n: ${err.message}`);
+        logger.error(`App - createChatroom Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };
 
 
 // 가격제안 삭제
-exports.deleteReview = async function (reviewId) {
+exports.deleteChatroom = async function (chatroomId) {
     try {
 
-        const deleteReviewParams = [reviewId];
+        const deleteChatroomParams = [chatroomId];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
-        const ReviewResult = await reviewDao.deleteReview(connection, deleteReviewParams);
+        const ChatroomResult = await chatroomDao.deleteChatroom(connection, deleteChatroomParams);
         console.log(`삭제 성공`)
         connection.release();
         return response(baseResponse.SUCCESS);
 
 
     } catch (err) {
-        logger.error(`App - deleteReview Service error\n: ${err.message}`);
+        logger.error(`App - deleteChatroom Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }

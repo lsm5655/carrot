@@ -1,42 +1,43 @@
-// 가격제안 생성
-async function insertKeyword(connection, insertKeywordParams) {
-  const insertKeywordQuery = `
-        INSERT INTO keyword(user_index, keyword_name)
-        VALUES (?, ?);
+// 후기 생성
+async function insertReview(connection, insertReviewParams) {
+  const insertReviewQuery = `
+        INSERT INTO review(user_index, goods_index, review_content)
+        VALUES (?, ?, ?);
     `;
-  const insertKeywordRow = await connection.query(
-    insertKeywordQuery,
-    insertKeywordParams
+  const insertReviewRow = await connection.query(
+    insertReviewQuery,
+    insertReviewParams
   );
 
-  return insertKeywordRow;
+  return insertReviewRow;
 }
 
 
-// 가격제안 조회
-async function selectKeyword(connection, userId) {
-  const selectKeywordQuery = `
-  select nickname, keyword_name
-  from keyword left join user u on u.idx = keyword.user_index
-  where u.idx = ?;
+// 후기 조회
+async function selectReview(connection, userId) {
+  const selectReviewQuery = `
+  select nickname, goodsTitle, review_content
+  from goods left join user u on u.idx = goods.sellerIdx
+  left join review r on r.goods_index = goods.idx
+  where r.user_index = ?;
                  `;
-  const [keywordRow] = await connection.query(selectKeywordQuery, userId);
-  return keywordRow;
+  const [reviewRow] = await connection.query(selectReviewQuery, userId);
+  return reviewRow;
 }
 
-// 상품 삭제
-async function deleteKeyword(connection, keywordId) {
-  const deleteKeywordQuery = `
+// 후기 삭제
+async function deleteReview(connection, reviewId) {
+  const deleteReviewQuery = `
   DELETE
-  FROM keyword
+  FROM review
   WHERE idx = ?;`;
-  const deleteKeywordRow = await connection.query(deleteKeywordQuery, [keywordId]);
-  return deleteKeywordRow[0];
+  const deleteReviewRow = await connection.query(deleteReviewQuery, [reviewId]);
+  return deleteReviewRow[0];
 }
 
 
 module.exports = {
-  insertKeyword,
-  selectKeyword,
-  deleteKeyword
+  insertReview,
+  selectReview,
+  deleteReview
 };

@@ -58,7 +58,9 @@ module.exports = {
     KEYWORD_ID_EMPTY : { "isSuccess": false, "code": 2035, "message": "키워드 ID를 입력해주세요." },
 
     REVIEW_CONTENT_EMPTY : { "isSuccess": false, "code": 2036, "message": "후기 내용을 입력해주세요." },
+    REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2036, "message": "후기 ID를 입력해주세요." },
 
+    CHATROOM_ID_EMPTY : { "isSuccess": false, "code": 2036, "message": "채팅방 ID를 입력해주세요." },
     
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

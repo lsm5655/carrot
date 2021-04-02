@@ -1,15 +1,15 @@
 module.exports = function(app){
-    const review = require('./reviewController');
+    const chatroom = require('./chatroomController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 1. 후기 생성 API
-    app.post('/app/review', review.postReview);
+    app.post('/app/chatroom', chatroom.postChatroom);
 
     // 2. 후기 조회 API
-    app.get('/app/review/:userId',review.getReviewById); 
+    app.get('/app/chatroom/:userId',chatroom.getChatroomById); 
 
     // 3. 후기 삭제 API
-    app.delete('/app/review/:keywordId', review.deleteReviewByID);
+    app.delete('/app/chatroom/:keywordId', chatroom.deleteChatroomByID);
 
 };
 

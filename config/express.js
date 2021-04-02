@@ -26,6 +26,8 @@ module.exports = function () {
     require('../src/app/Priceoffer/offerRoute')(app);
     require('../src/app/Notice/noticeRoute')(app);
     require('../src/app/Keyword/keywordRoute')(app);
+    require('../src/app/Review/reviewRoute')(app);
+    require('../src/app/Chatroom/chatroomRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;
