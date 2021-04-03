@@ -2,14 +2,14 @@ module.exports = function(app){
     const chatroom = require('./chatroomController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
-    // 1. 후기 생성 API
+    // 1. 채팅방 생성 API
     app.post('/app/chatroom', chatroom.postChatroom);
 
-    // 2. 후기 조회 API
+    // 2. 채팅방 조회 API
     app.get('/app/chatroom/:userId',chatroom.getChatroomById); 
 
-    // 3. 후기 삭제 API
-    app.delete('/app/chatroom/:keywordId', chatroom.deleteChatroomByID);
+    // 3. 채팅방 삭제 API
+    app.delete('/app/chatroom/:chatroomId', chatroom.deleteChatroomByID);
 
 };
 

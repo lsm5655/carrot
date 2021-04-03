@@ -9,7 +9,7 @@ const {emit} = require("nodemon");
 
 /**
  * API No. 29
- * API Name : 가격제안 생성 API
+ * API Name : 키워드 생성 API
  * [POST] /app/keyword
  */
 
@@ -57,7 +57,7 @@ exports.getKeywordById = async function (req, res) {
 
 /**
  * API No. 31
- * API Name : 가격제안 삭제 API
+ * API Name : 키워드 삭제 API
  * [DELETE] /app/priceoffer/{userId}
  */
 

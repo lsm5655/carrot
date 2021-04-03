@@ -2,7 +2,7 @@
 async function insertNoticeInfo(connection, insertNoticeInfoParams) {
   const insertNoticeQuery = `
         INSERT INTO notice(receiver_index, type)
-        VALUES (?, ?, ?);
+        VALUES (?, ?);
     `;
   const insertNoticeRow = await connection.query(
     insertNoticeQuery,

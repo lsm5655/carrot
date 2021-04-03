@@ -5,10 +5,10 @@ module.exports = function(app){
     // 1. 알림 생성 API
     app.post('/app/notice', notice.postNotice);
 
-    // 2. 가격제안 조회 API
+    // 2. 알림 조회 API
     app.get('/app/notice/:userId',notice.getNoticeById); 
 
-    // 3. 가격제안 삭제 API
+    // 3. 알림 삭제 API
     app.delete('/app/notice/:noticeId', notice.deleteNoticeById);
 
 };

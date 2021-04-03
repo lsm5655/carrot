@@ -62,11 +62,11 @@ exports.getNoticeById = async function (req, res) {
  * [DELETE] /app/notice/{noticeId}
  */
 
-exports.deletePriceofferByID = async function (req, res) {
+exports.deleteNoticeById = async function (req, res) {
 
     const noticeId = req.params.noticeId;
 
-    if (!noticeId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (!noticeId) return res.send(errResponse(baseResponse.NOTICE_ID_EMPTY));
 
     const NoticeById = await noticeService.deleteNotice(noticeId);
     return res.send(response(baseResponse.SUCCESS, NoticeById));

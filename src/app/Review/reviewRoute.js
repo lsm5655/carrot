@@ -9,7 +9,7 @@ module.exports = function(app){
     app.get('/app/review/:userId',review.getReviewById); 
 
     // 3. 후기 삭제 API
-    app.delete('/app/review/:keywordId', review.deleteReviewByID);
+    app.delete('/app/review/:reviewId', review.deleteReviewByID);
 
 };
 
