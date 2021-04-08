@@ -7,7 +7,7 @@ const {response, errResponse} = require("../../../config/response");
 // const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
 
-//
+//////////////////////
 /**
  * API No. 11
  * API Name : 전체 카테고리 조회 API (+ 번호로 검색 조회)
