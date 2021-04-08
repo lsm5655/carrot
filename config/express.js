@@ -28,6 +28,7 @@ module.exports = function () {
     require('../src/app/Keyword/keywordRoute')(app);
     require('../src/app/Review/reviewRoute')(app);
     require('../src/app/Chatroom/chatroomRoute')(app);
+    require('../src/app/Kakao/kakao')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;

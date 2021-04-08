@@ -3,13 +3,13 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 1. 관심상품 생성 API
-    app.post('/app/interestGoods', interestGoods.postInterestgoods);
+    app.post('/app/interestgoods', interestGoods.postInterestgoods);
 
     // 2. 특정 유저 관심상품 목록 조회 API
-    app.get('/app/interestGoods/:userId',interestGoods.getInterestGoodsById); 
+    app.get('/app/interestgoods/:userId',interestGoods.getInterestGoodsById); 
 
     // 3. 관심상품 삭제 API
-    app.delete('/app/interestGoods/:userId', interestGoods.deleteInterestGoodsByID);
+    app.delete('/app/interestgoods/:userId', interestGoods.deleteInterestGoodsByID);
 
 };
 
