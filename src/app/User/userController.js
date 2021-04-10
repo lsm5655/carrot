@@ -69,7 +69,9 @@ exports.getUsers = async function (req, res) {
         return res.send(response(baseResponse.SUCCESS, userListResult));
     } else {
         // 유저 검색 조회
+        
         const userListByPhonenum = await userProvider.retrieveUserList(phonenum);
+        console.log(userListByPhonenum)
         return res.send(response(baseResponse.SUCCESS, userListByPhonenum));
     }
 };
@@ -89,6 +91,7 @@ exports.getUserById = async function (req, res) {
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     const userByUserId = await userProvider.retrieveUser(userId);
+    
     return res.send(response(baseResponse.SUCCESS, userByUserId));
 };
 
@@ -165,6 +168,9 @@ exports.putUsers = async function (req, res) {
     return res.send(editUserInfo);
 }
 
+exports.kakaoLogin = async function (req, res){
+    res.redirect('https://kauth.kakao.com/oauth/authorize?client_id=')
+}
 
 
 

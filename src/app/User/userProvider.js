@@ -18,7 +18,7 @@ exports.retrieveUserList = async function (phonenum) {
     const userListResult = await userDao.selectUserPhonenum(connection, phonenum);
     connection.release();
 
-    return userListResult;
+    return userListResult[0];
   }
 };
 
@@ -27,7 +27,7 @@ exports.retrieveUser = async function (userId) {
   const userResult = await userDao.selectUserId(connection, userId);
 
   connection.release();
-
+  
   return userResult[0];
 };
 

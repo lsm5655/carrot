@@ -21,6 +21,7 @@ exports.createGoods = async function (userId, userlocationId, categoryId, goodsT
         const connection = await pool.getConnection(async (conn) => conn);
 
         const goodsResult = await goodsDao.insertGoodsInfo(connection, insertGoodsInfoParams);
+
         console.log(`추가된 회원 : ${goodsResult[0]}`)
         connection.release();
         return response(baseResponse.SUCCESS);

@@ -20,6 +20,12 @@ module.exports = function(app){
     // 5. 특정 유저 수정 API
     app.put('/app/users/:userId', user.putUsers);
 
+    // 6. 카카오 로그인 API
+    app.get('/kakao/log-in', user.kakaoLogin);
+
+    // 7. 코드 API
+    app.get('/auth/oauth', user.getCode);
+
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);
