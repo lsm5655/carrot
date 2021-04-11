@@ -40,27 +40,27 @@ module.exports = {
     RANGE_EMPTY : {"isSuccess": false, "code" : 2023, "message": "범위를 입력해주세요."},
 
     CATEGORY_CATEGORYID_EMPTY : { "isSuccess": false, "code": 2024, "message": "categoryId를 입력해주세요." },
-    CATEGORY_CATEGORYNAME_EMPTY : { "isSuccess": false, "code": 2024, "message": "category이름을 입력해주세요." },
-    CATEGORY_CATEGORYID_NOT_EXIST : { "isSuccess": false, "code": 2024, "message": "해당 categoryID가 존재하지 않습니다." },
+    CATEGORY_CATEGORYNAME_EMPTY : { "isSuccess": false, "code": 2025, "message": "category이름을 입력해주세요." },
+    CATEGORY_CATEGORYID_NOT_EXIST : { "isSuccess": false, "code": 2026, "message": "해당 categoryID가 존재하지 않습니다." },
 
-    GOODS_GOODSID_EMPTY : { "isSuccess": false, "code": 2025, "message": "goodsId를 입력해주세요." },
-    GOODS_GOODSID_NOT_EXIST : { "isSuccess": false, "code": 2026, "message": "해당 goodsID가 존재하지 않습니다." },
-    GOODS_SELLERLOCATIONID_EMPTY : { "isSuccess": false, "code": 2027, "message": "sellerlocationId를 입력해주세요." },
-    GOODS_GOODSTITLE_EMPTY : { "isSuccess": false, "code": 2028, "message": "상품제목을 입력해주세요." },
-    GOODS_PRICE_EMPTY : { "isSuccess": false, "code": 2029, "message": "상품가격을 입력해주세요. }"},
-    GOODS_ISPRICEOFFER_EMPTY : { "isSuccess": false, "code": 2030, "message": "가격제안여부를 입력해주세요." },
-    GOODS_CONTENT_EMPTY : { "isSuccess": false, "code": 2031, "message": "내용을 입력해주세요." },
+    GOODS_GOODSID_EMPTY : { "isSuccess": false, "code": 2027, "message": "goodsId를 입력해주세요." },
+    GOODS_GOODSID_NOT_EXIST : { "isSuccess": false, "code": 2028, "message": "해당 goodsID가 존재하지 않습니다." },
+    GOODS_SELLERLOCATIONID_EMPTY : { "isSuccess": false, "code": 2029, "message": "sellerlocationId를 입력해주세요." },
+    GOODS_GOODSTITLE_EMPTY : { "isSuccess": false, "code": 2030, "message": "상품제목을 입력해주세요." },
+    GOODS_PRICE_EMPTY : { "isSuccess": false, "code": 2031, "message": "상품가격을 입력해주세요. }"},
+    GOODS_ISPRICEOFFER_EMPTY : { "isSuccess": false, "code": 2032, "message": "가격제안여부를 입력해주세요." },
+    GOODS_CONTENT_EMPTY : { "isSuccess": false, "code": 2033, "message": "내용을 입력해주세요." },
 
-    NOTICE_TYPE_EMPTY : { "isSuccess": false, "code": 2032, "message": "알림 종류를 입력해주세요." },
-    NOTICE_ID_EMPTY : { "isSuccess": false, "code": 2033, "message": "알림 ID를 입력해주세요." },
+    NOTICE_TYPE_EMPTY : { "isSuccess": false, "code": 2034, "message": "알림 종류를 입력해주세요." },
+    NOTICE_ID_EMPTY : { "isSuccess": false, "code": 2035, "message": "알림 ID를 입력해주세요." },
 
-    KEYWORD_NAME_EMPTY : { "isSuccess": false, "code": 2034, "message": "키워드를 입력해주세요." },
-    KEYWORD_ID_EMPTY : { "isSuccess": false, "code": 2035, "message": "키워드 ID를 입력해주세요." },
+    KEYWORD_NAME_EMPTY : { "isSuccess": false, "code": 2036, "message": "키워드를 입력해주세요." },
+    KEYWORD_ID_EMPTY : { "isSuccess": false, "code": 2037, "message": "키워드 ID를 입력해주세요." },
 
-    REVIEW_CONTENT_EMPTY : { "isSuccess": false, "code": 2036, "message": "후기 내용을 입력해주세요." },
-    REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2036, "message": "후기 ID를 입력해주세요." },
+    REVIEW_CONTENT_EMPTY : { "isSuccess": false, "code": 2038, "message": "후기 내용을 입력해주세요." },
+    REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2039, "message": "후기 ID를 입력해주세요." },
 
-    CHATROOM_ID_EMPTY : { "isSuccess": false, "code": 2036, "message": "채팅방 ID를 입력해주세요." },
+    CHATROOM_ID_EMPTY : { "isSuccess": false, "code": 2040, "message": "채팅방 ID를 입력해주세요." },
     
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

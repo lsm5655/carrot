@@ -41,7 +41,7 @@ exports.postPriceoffer = async function (req, res) {
 
 /**
  * API No. 24
- * API Name : 상품 조회 API (+ 번호로 검색 조회)
+ * API Name : 가격제안 조회 API 
  * [GET] /app/priceoffer/:userId
  */
 exports.getPriceofferById = async function (req, res) {
