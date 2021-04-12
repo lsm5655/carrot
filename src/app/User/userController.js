@@ -6,6 +6,8 @@ const {response, errResponse} = require("../../../config/response");
 
 // const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
+const { request } = require("express");
+const { logger } = require("../../../config/winston");
 
 /**
  * API No. 0
@@ -168,9 +170,56 @@ exports.putUsers = async function (req, res) {
     return res.send(editUserInfo);
 }
 
+
 exports.kakaoLogin = async function (req, res){
-    res.redirect('https://kauth.kakao.com/oauth/authorize?client_id=')
+    const {kakaoToken} = req.body;
+    if(!kakaoToken) {
+        res.json({
+            isSuccess: false,
+            code: 2000,
+            message:"kakaoToken을 입력해주세요"
+        });
+    }
+    try{
+        const result = await request({
+            method: 'GET',
+            url: "https://kapi.kakao.com/v2/user/me",
+            headers: {
+                Authorization: `Bearer ${kakaoToken}`
+            }
+    },function(error, respose, body){
+        console.error('error:',error);
+        console.log('statusCode:', response);
+        console.log('body:',body);
+    });
+    return res.send(result);
 }
+    catch (err){
+        console.log(`App - kakaoLogin Query error\n: ${JSON.stringify(err)}`);
+    }
+}
+
+// exports.getCode = async function(req, res) {
+//     const {code} = req.query;
+
+//     try{
+//         const result = await request({
+//             method: 'POST',
+//             uri: 'https://kauth.kakao.com/oauth/token',
+//             body: {
+//                 code: 'Rxfl-nIoxFQ85nKhlJw2RkSvF55-iuAbzPByXpsfWZepU4Z0chusSd_yV4DzkN5t7biMgo9cuoAAAF4xgdI_w',
+//                 grant_type: 'authorization_code',
+//                 clientId: '80ab2b284163f57133dfdaabd2089d87',
+//                 redirect_uri: 'http://localhost:3000/auth/oauth',
+//                 client_secret: '7Ws1H3SmvqbldlQu091cRbgwiSZ50SmI'
+//             },
+//             json: true
+//         })
+//     }
+//     catch (err) {
+//         console.log('App - getCode Query error\n: ${JSON.stringify(err)}');
+//     }
+// }
 
 
 

@@ -50,6 +50,7 @@ module.exports = {
     GOODS_PRICE_EMPTY : { "isSuccess": false, "code": 2031, "message": "상품가격을 입력해주세요. }"},
     GOODS_ISPRICEOFFER_EMPTY : { "isSuccess": false, "code": 2032, "message": "가격제안여부를 입력해주세요." },
     GOODS_CONTENT_EMPTY : { "isSuccess": false, "code": 2033, "message": "내용을 입력해주세요." },
+    GOODS_FILELINK_EMPTY : { "isSuccess": false, "code": 2041, "message": "파일링크를 입력해주세요." },
 
     NOTICE_TYPE_EMPTY : { "isSuccess": false, "code": 2034, "message": "알림 종류를 입력해주세요." },
     NOTICE_ID_EMPTY : { "isSuccess": false, "code": 2035, "message": "알림 ID를 입력해주세요." },

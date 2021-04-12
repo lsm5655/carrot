@@ -21,7 +21,7 @@ module.exports = function(app){
     app.put('/app/users/:userId', user.putUsers);
 
     // 6. 카카오 로그인 API
-    //app.get('/kakao/log-in', user.kakaoLogin);
+    app.get('/kakao/login', user.kakaoLogin);
 
     // 7. 코드 API
     //app.get('/auth/oauth', user.getCode);

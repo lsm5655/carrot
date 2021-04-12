@@ -42,11 +42,11 @@ exports.postGoods = async function (req, res) {
     if (!content)
         return res.send(response(baseResponse.GOODS_CONTENT_EMPTY));
 
-    const signUpResponse = await goodsService.createGoods(
+    const goodsResponse = await goodsService.createGoods(
         userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content
     );
 
-    return res.send(signUpResponse);
+    return res.send(goodsResponse);
  }
 
 
