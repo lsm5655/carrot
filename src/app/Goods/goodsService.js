@@ -21,11 +21,34 @@ exports.createGoods = async function (userId, userlocationId, categoryId, goodsT
         const connection = await pool.getConnection(async (conn) => conn);
 
         const goodsResult = await goodsDao.insertGoodsInfo(connection, insertGoodsInfoParams);
-
         console.log(`추가된 회원 : ${goodsResult[0]}`)
         connection.release();
         return response(baseResponse.SUCCESS);
 
+
+    } catch (err) {
+        logger.error(`App - createGoods Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.createGoodsImg = async function (goodsId, fileArray) {
+    try {
+
+        
+        var fileArray = fileArray;
+        
+        for (var i = 0; i<fileArray.length; i++)
+        {
+            const connection = await pool.getConnection(async (conn) => conn);
+            const insertGoodsImgParams = [goodsId, fileArray[i].fileLink];
+            const goodsResult = await goodsDao.insertGoodsImgInfo(connection, insertGoodsImgParams);
+            console.log(`추가된 이미지 : ${goodsResult[i]}`)
+            connection.release();
+        }
+        
+
+        return response(baseResponse.SUCCESS);
 
     } catch (err) {
         logger.error(`App - createGoods Service error\n: ${err.message}`);

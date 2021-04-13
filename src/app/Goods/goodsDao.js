@@ -12,6 +12,20 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
   return insertGoodsInfoRow;
 }
 
+async function insertGoodsImgInfo(connection, insertGoodsImgParams) {
+  const insertGoodsInfoQuery = `
+        INSERT INTO goods_image(goods_idx, fileLink)
+        VALUES (?, ?);
+    `;
+  const insertGoodsImgInfoRow = await connection.query(
+    insertGoodsInfoQuery,
+    insertGoodsImgParams
+  );
+
+  return insertGoodsImgInfoRow;
+}
+
+
 
 // goodsId 상품 조회
 async function selectGoodsId(connection, goodsId) {
@@ -76,5 +90,6 @@ module.exports = {
   selectGoodsId,
   selectGoodsList,
   selectGoodsStatus,
-  deleteGoodsInfo
+  deleteGoodsInfo,
+  insertGoodsImgInfo
 };

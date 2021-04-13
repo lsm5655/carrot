@@ -42,13 +42,39 @@ exports.postGoods = async function (req, res) {
     if (!content)
         return res.send(response(baseResponse.GOODS_CONTENT_EMPTY));
 
-    const goodsResponse = await goodsService.createGoods(
+    const signUpResponse = await goodsService.createGoods(
         userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content
     );
 
-    return res.send(goodsResponse);
+    return res.send(signUpResponse);
  }
 
+/**
+ * API No. 
+ * API Name : 상품 이미지 생성 API
+ * [POST] /app/goodsimg
+ */
+
+exports.postGoodsImg = async function (req, res) {
+
+    /**
+     * Body: goodsId, fileLink
+     */
+    const {goodsId, fileArray} = req.body;
+
+    // 빈 값 체크
+    if (!goodsId)
+        return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
+    
+    if (!fileArray)
+        return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
+
+    const goodsImgResponse = await goodsService.createGoodsImg(
+        goodsId, fileArray
+    );
+
+    return res.send(goodsImgResponse);
+ }
 
 
 /**
