@@ -6,7 +6,7 @@ const {response, errResponse} = require("../../../config/response");
 
 // const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
-const { request } = require("express");
+var request = require("request");
 const { logger } = require("../../../config/winston");
 
 /**
@@ -172,8 +172,17 @@ exports.putUsers = async function (req, res) {
 
 
 exports.kakaoLogin = async function (req, res){
-    const {kakaoToken} = req.body;
-    if(!kakaoToken) {
+    const {access_token} = req.body;
+    const options = {
+        uri : "https://kapi.kakao.com/v2/user/me",
+        method : 'GET',
+        headers:{
+            Authorization: `Bearer ${access_token}`,
+            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        json:true
+    }
+    if(!access_token) {
         res.json({
             isSuccess: false,
             code: 2000,
@@ -181,21 +190,14 @@ exports.kakaoLogin = async function (req, res){
         });
     }
     try{
-        const result = await request({
-            method: 'GET',
-            url: "https://kapi.kakao.com/v2/user/me",
-            headers: {
-                Authorization: `Bearer ${kakaoToken}`
-            }
-    },function(error, respose, body){
-        console.error('error:',error);
-        console.log('statusCode:', response);
-        console.log('body:',body);
-    });
-    return res.send(result);
-}
+        request(options, function(err, Response,body){
+            console.log(body);
+        })
+    }
+    
+
     catch (err){
-        console.log(`App - kakaoLogin Query error\n: ${JSON.stringify(err)}`);
+        console.log(`App - kakaoLogin Query error\n: ${err}}`);
     }
 }
 
