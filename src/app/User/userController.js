@@ -123,11 +123,11 @@ exports.getUserById = async function (req, res) {
  */
 exports.login = async function (req, res) {
 
-    const {email, password} = req.body;
+    const {phonenum} = req.body;
 
     // TODO: email, password 형식적 Validation
 
-    const signInResponse = await userService.postSignIn(email, password);
+    const signInResponse = await userService.postSignIn(phonenum);
 
     return res.send(signInResponse);
 };

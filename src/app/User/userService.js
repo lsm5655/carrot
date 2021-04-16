@@ -44,29 +44,29 @@ exports.createUser = async function (phonenum, nickname) {
 
 
 // TODO: After 로그인 인증 방법 (JWT)
-exports.postSignIn = async function (email, password) {
+exports.postSignIn = async function (phonenum) {
     try {
         // 이메일 여부 확인
-        const emailRows = await userProvider.emailCheck(email);
-        if (emailRows.length < 1) return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
+        const phonenumRows = await userProvider.phonenumCheck(phonenum);
+        if (phonenumRows.length < 1) return errResponse(baseResponse.SIGNIN_PHONENUM_EMPTY);
 
-        const selectEmail = emailRows[0].email
+        const selectPhonenum = phonenumRows[0].phonenum
 
         // 비밀번호 확인
-        const hashedPassword = await crypto
-            .createHash("sha512")
-            .update(password)
-            .digest("hex");
+        // const hashedPassword = await crypto
+        //     .createHash("sha512")
+        //     .update(password)
+        //     .digest("hex");
 
-        const selectUserPasswordParams = [selectEmail, hashedPassword];
-        const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
+        const selectUserPasswordParams = [selectPhonenum];
+        // const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
 
-        if (passwordRows[0].password !== hashedPassword) {
-            return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
-        }
+        // if (passwordRows[0].password !== hashedPassword) {
+        //     return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
+        // }
 
         // 계정 상태 확인
-        const userInfoRows = await userProvider.accountCheck(email);
+        const userInfoRows = await userProvider.accountCheck(phonenum);
 
         if (userInfoRows[0].status === "INACTIVE") {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
@@ -74,12 +74,12 @@ exports.postSignIn = async function (email, password) {
             return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
         }
 
-        console.log(userInfoRows[0].id) // DB의 userId
+        console.log(userInfoRows[0].idx) // DB의 userId
 
         //토큰 생성 Service
         let token = await jwt.sign(
             {
-                userId: userInfoRows[0].id,
+                userId: userInfoRows[0].idx,
             }, // 토큰의 내용(payload)
             secret_config.jwtsecret, // 비밀키
             {
@@ -88,7 +88,7 @@ exports.postSignIn = async function (email, password) {
             } // 유효 기간 365일
         );
 
-        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].id, 'jwt': token});
+        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].idx, 'jwt': token});
 
     } catch (err) {
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
