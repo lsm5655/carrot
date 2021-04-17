@@ -30,3 +30,12 @@ exports.retrieveGoodsById = async function (goodsId) {
 
   return goodsResult;
 };
+
+exports.retrieveGoodsByUserId = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const goodsResult = await goodsDao.selectGoodsIdByUserId(connection, userId);
+
+  connection.release();
+
+  return goodsResult;
+};

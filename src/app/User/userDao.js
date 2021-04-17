@@ -30,6 +30,17 @@ async function selectUserPhonenum(connection, phonenum) {
   return phonenumRows;
 }
 
+// 상태 조회
+async function selectStatusCheck(connection, userId) {
+  const selectStatusCheckQuery = `
+                SELECT phonenum, nickname 
+                FROM user 
+                WHERE idx = ? and status = 'INACTIVE';
+                `;
+  const [statusRows] = await connection.query(selectStatusCheckQuery, userId);
+  return statusRows;
+}
+
 
 // userId 회원 조회
 async function selectUserId(connection, userId) {
@@ -40,6 +51,18 @@ async function selectUserId(connection, userId) {
                  `;
   const [userRow] = await connection.query(selectUserIdQuery, userId);
   return userRow;
+}
+
+// userId 프로필 조회
+async function selectProfile(connection, userId) {
+  const selectUserIdQuery = `
+    select nickname, user.idx, score, user.created_at, goodsTitle, review_content
+    from goods right join user on user.idx = goods.sellerIdx
+    left join review on review.goods_index = goods.idx
+    where user.idx = ?;
+                 `;
+  const profileRow = await connection.query(selectUserIdQuery, userId);
+  return profileRow;
 }
 
 // 유저 생성
@@ -94,8 +117,8 @@ async function updateUserInfo(connection, id, nickname) {
 
 async function deleteUserInfo(connection, id) {
   const deleteUserQuery = `
-  DELETE
-  FROM user
+  UPDATE user
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE idx = ?;`;
   const deleteUserRow = await connection.query(deleteUserQuery, [id]);
   return deleteUserRow[0];
@@ -111,5 +134,7 @@ module.exports = {
   selectUserAccount,
   updateUserInfo,
   selectUserPhonenum,
-  deleteUserInfo
+  deleteUserInfo,
+  selectStatusCheck,
+  selectProfile
 };

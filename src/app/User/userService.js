@@ -118,6 +118,15 @@ exports.deleteUser = async function (id) {
         if (userIdRows.length == 0)
             return errResponse(baseResponse.USER_USERID_NOT_EXIST);
 
+        // 상태 조회
+        const userInfoRows = await userProvider.accountCheck(phonenum);
+
+        if (userInfoRows[0].status === "INACTIVE") {
+            return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
+        } else if (userInfoRows[0].status === "DELETED") {
+            return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
+        }
+
         const deleteUserInfoParams = [id];
 
         const connection = await pool.getConnection(async (conn) => conn);

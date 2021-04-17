@@ -9,6 +9,9 @@ const {emit} = require("nodemon");
 var request = require("request");
 const { logger } = require("../../../config/winston");
 
+var regPhonenum =/(01[016789])([1-9]{1}[0-9]{2,3})([0-9]{4})$/;
+var regNickname= /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g; 
+
 /**
  * API No. 0
  * API Name : 테스트 API
@@ -37,12 +40,18 @@ exports.postUsers = async function (req, res) {
     // 길이 체크
     if (phonenum.length != 11)
         return res.send(response(baseResponse.SIGNUP_PHONENUM_LENGTH));
+ 
+    if(!regPhonenum.test(phoneNum)){ 
+        return res.send(baseResponse.SIGNUP_PHONENUM_ERROR_TYPE)
+    } 
 
-    // 형식 체크 (by 정규표현식)
-    // if (!regexEmail.test(email))
-    //     return res.send(response(baseResponse.SIGNUP_PHONENUM_ERROR_TYPE));
+    if(nickname.length < 2 && nickname.length > 6) {
+        return res.send(baseResponse.USER_NICKNAME_LENGTH)
+    }
 
-    // 기타 등등 - 추가하기
+    if(!regNickname.test(nikcname)) {
+        return res. send(baseResponse.USER_NICKNAME_TYPE)
+    }
 
 
     const signUpResponse = await userService.createUser(
@@ -99,18 +108,51 @@ exports.getUserById = async function (req, res) {
 
 /**
  * API No. 4
+ * API Name : 프로필 조회 API
+ * [GET] /app/profile/{userId}
+ */
+exports.getProfileById = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
+    const userId = req.params.userId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const getProfileInfo = await userProvider.getProfile(userId)
+        return res.send(getProfileInfo);
+    }
+};
+
+
+
+/**
+ * API No. 4
  * API Name : 특정 유저 삭제 API
  * [DELETE] /app/users/{userId}
  */
 
  exports.deleteUserByID = async function (req, res) {
 
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const userByUserId = await userService.deleteUser(userId);
-    return res.send(response(baseResponse.SUCCESS, userByUserId));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const deleteUserInfo = await userService.deleteUser(userId)
+        return res.send(deleteUserInfo);
+    }
  }
 
 
@@ -158,17 +200,6 @@ exports.patchUsers = async function (req, res) {
         return res.send(editUserInfo);
     }
 };
-
-exports.putUsers = async function (req, res) {
-
-    const userId = req.params.userId;
-    const nickname = req.body.nickname;
-
-    if(!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
-
-    const editUserInfo = await userService.editUser(userId, nickname)
-    return res.send(editUserInfo);
-}
 
 
 exports.kakaoLogin = async function (req, res){

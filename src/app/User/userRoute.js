@@ -14,13 +14,13 @@ module.exports = function(app){
     // 3. 특정 유저 조회 API
     app.get('/app/users/:userId', user.getUserById);
 
-    // 4. 특정 유저 삭제 API
-    app.delete('/app/users/:userId', user.deleteUserByID);
+    // 4. 특정 유저 프로필 조회 API
+    app.get('/app/profile/:userId', jwtMiddleware, user.getProfileById);
 
-    // 5. 특정 유저 수정 API
-    app.put('/app/users/:userId', user.putUsers);
+    // 5. 특정 유저 삭제 API
+    app.put('/app/users/:userId', jwtMiddleware, user.deleteUserByID);
 
-    // 6. 카카오 로그인 API
+    // 7. 카카오 로그인 API
     app.get('/kakao/login', user.kakaoLogin);
 
     // 7. 코드 API

@@ -12,23 +12,30 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
   return insertGoodsInfoRow;
 }
 
-async function insertGoodsImgInfo(connection, insertGoodsImgParams) {
-  const insertGoodsInfoQuery = `
+async function insertGoodsImgInfo(connection, goodsId, fileLink) {
+  const insertGoodsimgInfoQuery = `
         INSERT INTO goods_image(goods_idx, fileLink)
         VALUES (?, ?);
     `;
-  const insertGoodsImgInfoRow = await connection.query(
-    insertGoodsInfoQuery,
-    insertGoodsImgParams
-  );
+  
+  for (var i=0; i<fileLink.length;i++)
+  { 
+    const insertGoodsImgInfoRow = await connection.query(
+      insertGoodsimgInfoQuery,
+      goodsId,
+      fileLink[i]
+    );
 
   return insertGoodsImgInfoRow;
+  }
+
 }
 
 
 
 // goodsId 상품 조회
 async function selectGoodsId(connection, goodsId) {
+  
   const selectGoodsIdQuery = `
   SELECT file_index, nickname, activeLocation, score, goodsTitle, c.categoryname, goods.updated_at, content,
        count(distinct cr.buyerIdx) as room, count(distinct ig.goodsIdx) as igoods,
@@ -40,6 +47,18 @@ async function selectGoodsId(connection, goodsId) {
   WHERE goods.idx = ?;
                  `;
   const [goodsRow] = await connection.query(selectGoodsIdQuery, goodsId);
+  return goodsRow;
+}
+
+async function selectGoodsIdByUserId(connection, userId) {
+  
+  const selectGoodsIdQuery = `
+    select goods.idx
+    from goods
+    where sellerIdx = ?
+    order by created_at desc limit 1;
+                 `;
+  const [goodsRow] = await connection.query(selectGoodsIdQuery, userId);
   return goodsRow;
 }
 
@@ -91,5 +110,6 @@ module.exports = {
   selectGoodsList,
   selectGoodsStatus,
   deleteGoodsInfo,
-  insertGoodsImgInfo
+  insertGoodsImgInfo,
+  selectGoodsIdByUserId
 };

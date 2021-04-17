@@ -31,6 +31,15 @@ exports.retrieveUser = async function (userId) {
   return userResult[0];
 };
 
+exports.getProfile = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const userResult = await userDao.selectProfile(connection, userId);
+
+  connection.release();
+  
+  return userResult[0];
+};
+
 exports.emailCheck = async function (email) {
   const connection = await pool.getConnection(async (conn) => conn);
   const emailCheckResult = await userDao.selectUserEmail(connection, email);
@@ -63,4 +72,12 @@ exports.phonenumCheck = async function (phonenum) {
   connection.release();
 
   return phoenumCheckResult;
+};
+
+exports.statusCheck = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const statusCheckResult = await userDao.selectStatusCheck(connection, userId);
+  connection.release();
+
+  return statusCheckResult;
 };

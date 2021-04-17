@@ -18,7 +18,7 @@ exports.postGoods = async function (req, res) {
     /**
      * Body: userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content
      */
-    const {userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content} = req.body;
+    const {userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink} = req.body;
 
     // 빈 값 체크
     if (!userId)
@@ -42,11 +42,22 @@ exports.postGoods = async function (req, res) {
     if (!content)
         return res.send(response(baseResponse.GOODS_CONTENT_EMPTY));
 
-    const signUpResponse = await goodsService.createGoods(
-        userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content
+    if (!fileLink)
+        return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
+
+    const goodsResponse = await goodsService.createGoods(
+        userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink
     );
 
-    return res.send(signUpResponse);
+    // const goodsInfo = await goodsProvider.retrieveGoodsByUserId(userId);
+    
+    // const goodsImgResponse = await goodsService.createGoodsImg(
+    //     goodsInfo[0].idx, fileLink
+    // );
+
+
+
+    return res.send(goodsResponse);
  }
 
 /**
@@ -55,26 +66,26 @@ exports.postGoods = async function (req, res) {
  * [POST] /app/goodsimg
  */
 
-exports.postGoodsImg = async function (req, res) {
+// exports.postGoodsImg = async function (req, res) {
 
-    /**
-     * Body: goodsId, fileLink
-     */
-    const {goodsId, fileArray} = req.body;
+//     /**
+//      * Body: goodsId, fileLink
+//      */
+//     const {goodsId, fileLink} = req.body;
 
-    // 빈 값 체크
-    if (!goodsId)
-        return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
+//     // 빈 값 체크
+//     if (!goodsId)
+//         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
     
-    if (!fileArray)
-        return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
+//     if (!fileLink)
+//         return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
 
-    const goodsImgResponse = await goodsService.createGoodsImg(
-        goodsId, fileArray
-    );
+//     const goodsImgResponse = await goodsService.createGoodsImg(
+//         goodsId, fileLink
+//     );
 
-    return res.send(goodsImgResponse);
- }
+//     return res.send(goodsImgResponse);
+//  }
 
 
 /**

@@ -15,7 +15,7 @@ module.exports = function(app){
     app.delete('/app/goods/:goodsId', goods.deleteGoodsByID);
 
     // 5. 상품 이미지 생성 API
-    app.post('/app/goodsimg', goods.postGoodsImg)
+    // app.post('/app/goodsimg', goods.postGoodsImg)
 };
 
 
