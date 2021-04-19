@@ -19,16 +19,18 @@ exports.createGoods = async function (userId, userlocationId, categoryId, goodsT
         const insertGoodsInfoParams = [userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content];
 
         const connection = await pool.getConnection(async (conn) => conn);
+        await connection.beginTransaction()
 
         const goodsResult = await goodsDao.insertGoodsInfo(connection, insertGoodsInfoParams);
         console.log(`추가된 상품 : ${JSON.stringify(goodsResult)}`)
         const goodsIdinfo = goodsResult[0].insertId;
         var fileLinkinfo = fileLink;
         const goodsimgResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
+        await connection.commit()
         console.log(`추가된 이미지 : ${JSON.stringify(goodsimgResult)}`);
         connection.release();
         return response(baseResponse.SUCCESS);
-
+        
 
     } catch (err) {
         logger.error(`App - createGoods Service error\n: ${err.message}`);

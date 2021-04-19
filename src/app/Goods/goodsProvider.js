@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
@@ -25,10 +26,11 @@ exports.retrieveGoodsList = async function (goodsStatus) {
 exports.retrieveGoodsById = async function (goodsId) {
   const connection = await pool.getConnection(async (conn) => conn);
   const goodsResult = await goodsDao.selectGoodsId(connection, goodsId);
+  const goodsviewResult = await goodsDao.selectGoodsViewId(connection, goodsId);
 
   connection.release();
 
-  return goodsResult;
+  return (goodsResult||goodsviewResult);
 };
 
 exports.retrieveGoodsByUserId = async function (userId) {

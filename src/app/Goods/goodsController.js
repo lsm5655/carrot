@@ -6,6 +6,7 @@ const {response, errResponse} = require("../../../config/response");
 
 // const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
+const compression = require("compression");
 
 /**
  * API No. 18
@@ -103,8 +104,7 @@ exports.getGoodsById = async function (req, res) {
     if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
 
     const goodsByIdResult = await goodsProvider.retrieveGoodsById(goodsId);
-    return res.send(response(baseResponse.SUCCESS, goodsByIdResult));
-    
+    return res.json (response(baseResponse.SUCCESS, (goodsByIdResult)));
 };
 
 /**
