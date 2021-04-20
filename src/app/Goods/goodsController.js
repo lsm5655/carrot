@@ -133,16 +133,27 @@ exports.getGoodsById = async function (req, res) {
 /**
  * API No. 21
  * API Name : 상품 삭제 API
- * [DELETE] /app/goods/{goodsId}
+ * [PUT] /app/goods/{goodsId}
  */
 
 exports.deleteGoodsByID = async function (req, res) {
+    // jwt - userId, path variable :userId
 
-    const goodsId = req.params.goodsId;
+    const userIdFromJWT = req.verifiedToken.userId
 
-    if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
+    const userId = req.params.userId;
+    const goodsId = req.body.goodsId;
 
-    const goodsById = await goodsService.deleteGoods(goodsId);
-    return res.send(response(baseResponse.SUCCESS, goodsById));
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
+
+        const goodsById = await goodsService.deleteGoods(userId, goodsId);
+        return res.send(response(baseResponse.SUCCESS, goodsById));
+    }
+
  }
 

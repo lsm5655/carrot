@@ -137,11 +137,20 @@ async function selectGoodsStatus(connection, goodsStatus) {
 // 상품 삭제
 async function deleteGoodsInfo(connection, goodsId) {
   const deleteGoodsQuery = `
-  DELETE
-  FROM goods
+  UPDATE goods
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE idx = ?;`;
   const deleteGoodsRow = await connection.query(deleteGoodsQuery, [goodsId]);
   return deleteGoodsRow[0];
+}
+
+async function checkUserBygoodsId(connection, goodsId) {
+  const checkGoodsQuery = `
+  select sellerIdx
+  from goods
+  where idx = ?;`;
+  const checkGoodsRow = await connection.query(checkGoodsQuery, [goodsId]);
+  return checkGoodsRow[0];
 }
 
 
@@ -153,5 +162,6 @@ module.exports = {
   deleteGoodsInfo,
   insertGoodsImgInfo,
   selectGoodsIdByUserId,
-  selectGoodsViewId
+  selectGoodsViewId,
+  checkUserBygoodsId
 };

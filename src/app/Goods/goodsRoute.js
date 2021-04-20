@@ -12,7 +12,7 @@ module.exports = function(app){
     app.get('/app/goodslist', goods.getGoodsList);
 
     // 4. 상품 삭제 API
-    app.delete('/app/goods/:goodsId', goods.deleteGoodsByID);
+    app.put('/app/goods/:userId',jwtMiddleware, goods.deleteGoodsByID);
 
     // 5. 상품 이미지 생성 API
     // app.post('/app/goodsimg', goods.postGoodsImg)

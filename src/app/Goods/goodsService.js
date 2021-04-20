@@ -59,18 +59,21 @@ exports.createGoods = async function (userId, userlocationId, categoryId, goodsT
 // };
 
 // 카테고리 삭제
-exports.deleteGoods = async function (goodsId) {
+exports.deleteGoods = async function (userId, goodsId) {
     try {
-        // ID로 회원 조회
-        const goodsIdRows = await goodsProvider.retrieveGoodsById(goodsId);
-        if (goodsIdRows.length == 0)
-            return errResponse(baseResponse.GOODS_GOODSID_NOT_EXIST);
+        // ID로 상품 조회
+        const goodsIdRows = await goodsProvider.selectUserById(goodsId);
+        if (goodsIdRows.length == 0){
+            return errResponse(baseResponse.GOODS_GOODSID_NOT_EXIST);}
+            else if (goodsIdRows.sellerIdx != userId){
+                return errResponse(baseResponse.GOODS_USER_NOT_MATCH)
+            }
 
         const deleteGoodsInfoParams = [goodsId];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
-        const categoryIdResult = await goodsDao.deleteGoodsInfo(connection, deleteGoodsInfoParams);
+        const goodsIdResult = await goodsDao.deleteGoodsInfo(connection, deleteGoodsInfoParams);
         console.log(`삭제 성공`)
         connection.release();
         return response(baseResponse.SUCCESS);
