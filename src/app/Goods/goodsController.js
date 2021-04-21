@@ -67,26 +67,26 @@ exports.postGoods = async function (req, res) {
  * [POST] /app/goodsimg
  */
 
-// exports.postGoodsImg = async function (req, res) {
+exports.postGoodsImg = async function (req, res) {
 
-//     /**
-//      * Body: goodsId, fileLink
-//      */
-//     const {goodsId, fileLink} = req.body;
+    /**
+     * Body: goodsId, fileLink
+     */
+    const {goodsId, fileLink} = req.body;
 
-//     // 빈 값 체크
-//     if (!goodsId)
-//         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
+    // 빈 값 체크
+    if (!goodsId)
+        return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
     
-//     if (!fileLink)
-//         return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
+    if (!fileLink)
+        return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
 
-//     const goodsImgResponse = await goodsService.createGoodsImg(
-//         goodsId, fileLink
-//     );
+    const goodsImgResponse = await goodsService.createGoodsImg(
+        goodsId, fileLink
+    );
 
-//     return res.send(goodsImgResponse);
-//  }
+    return res.send(goodsImgResponse);
+ }
 
 
 /**
@@ -120,14 +120,49 @@ exports.getGoodsById = async function (req, res) {
     const goodsStatus = req.query.goodsStatus;
 
     if (!goodsStatus) {
-        // 유저 전체 조회
+        // 상품 전체 조회
         const goodsListResult = await goodsProvider.retrieveGoodsList();
         return res.send(response(baseResponse.SUCCESS, goodsListResult));
     } else {
-        // 유저 검색 조회
+        // 상품 판매내역에 따라 조회
         const goodsListByGoodsStatus = await goodsProvider.retrieveGoodsList(goodsStatus);
         return res.send(response(baseResponse.SUCCESS, goodsListByGoodsStatus));
     }
+};
+
+/**
+ * API No. 20
+ * API Name : 판매내역 조회 API
+ * [GET] /app/goodsList
+ */
+exports.getGoodsListByUser = async function (req, res) {
+
+    /**
+     * Query String: goodsStatus
+     */
+    const userIdFromJWT = req.verifiedToken.userId
+
+    const userId = req.params.userId;
+    const goodsStatus = req.query.goodsStatus;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!goodsStatus) {
+            // 상품 전체 조회
+            const goodsListResult = await goodsProvider.retrieveGoodsListByUser(userId);
+            return res.send(response(baseResponse.SUCCESS, goodsListResult));
+        } else {
+            // 상품 판매내역에 따라 조회
+            const goodsListByGoodsStatus = await goodsProvider.retrieveGoodsListByUser(userId, goodsStatus);
+            return res.send(response(baseResponse.SUCCESS, goodsListByGoodsStatus));
+        }
+    }
+    
+
+    
 };
 
 /**

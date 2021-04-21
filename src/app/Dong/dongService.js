@@ -52,10 +52,17 @@ exports.createActiveDong = async function (userId, range, location) {
 };
 
 
-exports.deleteActiveDong = async function (userId) {
+exports.deleteActiveDong = async function (userId, dongname) {
     try {
 
-        const deleteDongParams = [userId];
+        const deleteDongParams = [userId, dongname];
+        const dongInfoRows = await dongProvider.dongCheck(userId);
+
+        if (dongInfoRows[0].status === "INACTIVE") {
+            return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
+        } else if (dongInfoRows[0].status === "DELETED") {
+            return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
+        }
 
         const connection = await pool.getConnection(async (conn) => conn);
 

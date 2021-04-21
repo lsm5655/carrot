@@ -23,6 +23,23 @@ exports.retrieveGoodsList = async function (goodsStatus) {
   }
 };
 
+exports.retrieveGoodsListByUser = async function (userId, goodsStatus) {
+  if (!goodsStatus) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const goodsListResult = await goodsDao.selectGoodsListByUser(connection, userId);
+    connection.release();
+
+    return goodsListResult;
+
+  } else {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const goodsListResult = await goodsDao.selectGoodsStatusByUser(connection, userId, goodsStatus);
+    connection.release();
+
+    return goodsListResult;
+  }
+};
+
 exports.retrieveGoodsById = async function (goodsId) {
   const connection = await pool.getConnection(async (conn) => conn);
   const goodsResult = await goodsDao.selectGoodsId(connection, goodsId);
@@ -30,7 +47,7 @@ exports.retrieveGoodsById = async function (goodsId) {
 
   connection.release();
 
-  return (goodsResult||goodsviewResult);
+  return (goodsResult+goodsviewResult);
 };
 
 exports.retrieveGoodsByUserId = async function (userId) {

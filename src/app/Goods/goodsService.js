@@ -14,51 +14,52 @@ const {connect} = require("http2");
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
 exports.createGoods = async function (userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink) {
+    const insertGoodsInfoParams = [userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content];
+
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
         
-        const insertGoodsInfoParams = [userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content];
-
-        const connection = await pool.getConnection(async (conn) => conn);
         await connection.beginTransaction()
 
         const goodsResult = await goodsDao.insertGoodsInfo(connection, insertGoodsInfoParams);
         console.log(`추가된 상품 : ${JSON.stringify(goodsResult)}`)
         const goodsIdinfo = goodsResult[0].insertId;
-        var fileLinkinfo = fileLink;
+        const fileLinkinfo = fileLink;
         const goodsimgResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
         await connection.commit()
         console.log(`추가된 이미지 : ${JSON.stringify(goodsimgResult)}`);
-        connection.release();
+        
         return response(baseResponse.SUCCESS);
         
 
     } catch (err) {
         logger.error(`App - createGoods Service error\n: ${err.message}`);
+        await connection.rollback()
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release()
+    }
+};
+
+exports.createGoodsImg = async function (goodsId, fileLink) {
+    try {
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const goodsIdinfo = goodsId;
+        const fileLinkinfo = fileLink;
+        const goodsResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
+        console.log(`추가된 이미지 : ${goodsResult}`);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - createGoodsimg Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };
 
-// exports.createGoodsImg = async function (goodsId, fileLink) {
-//     try {
-
-//         const connection = await pool.getConnection(async (conn) => conn);
-//         const goodsIdinfo = goodsId;
-//         const fileLinkinfo = fileLink;
-//         const goodsResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
-//         console.log(`추가된 이미지 : ${goodsResult[0]}`);
-//         connection.release();
-
-        
-
-//         return response(baseResponse.SUCCESS);
-
-//     } catch (err) {
-//         logger.error(`App - createGoodsimg Service error\n: ${err.message}`);
-//         return errResponse(baseResponse.DB_ERROR);
-//     }
-// };
-
-// 카테고리 삭제
+// 상품 삭제
 exports.deleteGoods = async function (userId, goodsId) {
     try {
         // ID로 상품 조회

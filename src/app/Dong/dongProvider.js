@@ -48,3 +48,12 @@ exports.retrieveDongList = async function (dongname) {
     }
   };
   
+
+exports.dongCheck = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const dongResult = await dongDao.selectDongCheck(connection, userId);
+  
+  connection.release();
+  
+  return dongResult[0];
+};

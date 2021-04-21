@@ -27,14 +27,17 @@ async function insertActiveDong(connection, insertActiveDongParams) {
     return insertActiveDongRow;
   }
   
-
-async function deleteActiveDong(connection, id) {
+// 동 삭제
+async function deleteActiveDong(connection, userId, dongName) {
     const deleteActiveDongQuery = `
-          DELETE FROM activeDong WHERE userIdx = ?;
+    UPDATE activeDong
+    SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
+    WHERE userIdx = ? and activeLocation = ?;
       `;
     const deleteActiveDongRow = await connection.query(
       deleteActiveDongQuery,
-      id
+      userId,
+      dongName
     );
   
     return deleteActiveDongRow[0];
@@ -74,11 +77,23 @@ async function selectDongName(connection, dongname) {
   }
   
 
+    // 동 검사
+async function selectDongCheck(connection, userId) {
+  const selectDongCheckQuery = `
+                SELECT status, activeLocation 
+                FROM activeDong
+                WHERE userIdx = ?;
+                `;
+  const [dongcheckRows] = await connection.query(selectDongCheckQuery, userId);
+  return dongcheckRows;
+}
+
   module.exports = {
     insertDong,
     insertActiveDong,
     deleteActiveDong,
     selectDongId,
     selectDong,
-    selectDongName
+    selectDongName,
+    selectDongCheck
   }

@@ -74,12 +74,23 @@ exports.deleteActiveDongById = async function (req, res) {
     /**
      * params : userId
      */
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
+    const dongname = req.body.dongname
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (!dongname) return res.send(errResponse(baseResponse.DONGNAME_EMPTY));
 
-    const activedongByUserId = await dongService.deleteActiveDong(userId);
-    return res.send(response(baseResponse.SUCCESS, activedongByUserId));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const activedongByUserId = await dongService.deleteActiveDong(userId, dongname);
+        return res.send(response(baseResponse.SUCCESS, activedongByUserId));
+    }
+    
 };
 
 

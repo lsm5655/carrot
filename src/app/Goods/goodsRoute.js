@@ -11,11 +11,14 @@ module.exports = function(app){
     // 3. 상품 상태에 따른 글 목록 API
     app.get('/app/goodslist', goods.getGoodsList);
 
-    // 4. 상품 삭제 API
+     // 4. 판매내역 보기 API
+     app.get('/app/goodslist/:userId', jwtMiddleware, goods.getGoodsListByUser);
+
+    // 5. 상품 삭제 API
     app.put('/app/goods/:userId',jwtMiddleware, goods.deleteGoodsByID);
 
     // 5. 상품 이미지 생성 API
-    // app.post('/app/goodsimg', goods.postGoodsImg)
+    app.post('/app/goodsimg', goods.postGoodsImg)
 };
 
 

@@ -6,13 +6,13 @@ module.exports = function(app){
     app.post('/app/dong', dong.postDong);
 
     // 7. 유저가 사는 동 생성 API
-    app.post('/app/activedong', dong.postActiveDong);
+    app.post('/app/activedong', jwtMiddleware, dong.postActiveDong);
 
     // 8. 유저가 사는 동 삭제 API
-    app.delete('/app/activedong/:userId',dong.deleteActiveDongById); 
+    app.delete('/app/activedong/:userId',jwtMiddleware, dong.deleteActiveDongById); 
 
     // 9. 특정 유저 동 조회 API
-    app.get('/app/activedong/:userId', dong.getDongById);
+    app.get('/app/activedong/:userId', jwtMiddleware, dong.getDongById);
 
     // 10. 전체 동 조회 API
     app.get('/app/dong', dong.getDong);
