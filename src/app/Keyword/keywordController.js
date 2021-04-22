@@ -18,20 +18,28 @@ exports.postKeyword = async function (req, res) {
     /**
      * Body: userId, keyword
      */
-    const {userId, keyword} = req.body;
+    const {keyword} = req.body;
+    // jwt - userId, path variable :userId
 
-    // 빈 값 체크
-    if (!userId)
-        return res.send(response(baseResponse.USER_USERID_EMPTY));
-        
-    if (!keyword)
-        return res.send(response(baseResponse.KEYWORD_NAME_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId
 
-    const signUpResponse = await keywordService.createKeyword(
-        userId, keyword
-    )
+    const userId = req.params.userId;
 
-    return res.send(signUpResponse);
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈 값 체크
+        if (!keyword)
+            return res.send(response(baseResponse.KEYWORD_NAME_EMPTY));
+    
+        const signUpResponse = await keywordService.createKeyword(
+            userId, keyword
+        )
+    
+        return res.send(signUpResponse);
+    }
  }
 
 
@@ -46,12 +54,21 @@ exports.getKeywordById = async function (req, res) {
     /**
      * Path Variable: userId
      */
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const keywordByIdResult = await keywordProvider.retrieveKeywordById(userId);
-    return res.send(response(baseResponse.SUCCESS, keywordByIdResult));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const keywordByIdResult = await keywordProvider.retrieveKeywordById(userId);
+        return res.send(response(baseResponse.SUCCESS, keywordByIdResult));
+    }
+
     
 };
 
@@ -62,12 +79,25 @@ exports.getKeywordById = async function (req, res) {
  */
 
 exports.deleteKeywordByID = async function (req, res) {
+    // jwt - userId, path variable :userId
 
-    const keywordId = req.params.keywordId;
+    const userIdFromJWT = req.verifiedToken.userId
 
-    if (!keywordId) return res.send(errResponse(baseResponse.KEYWORD_ID_EMPTY));
+    const userId = req.params.userId;
 
-    const KeywordById = await keywordService.deleteKeyword(keywordId);
+    const keyword = req.body.keyword;
+
+    if (!keyword) return res.send(errResponse(baseResponse.KEYWORD_NAME_EMPTY));
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+    const KeywordById = await keywordService.deleteKeyword(userId, keyword);
     return res.send(response(baseResponse.SUCCESS, KeywordById));
+    }
+
+    
  }
 

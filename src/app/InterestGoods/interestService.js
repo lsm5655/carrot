@@ -16,6 +16,10 @@ const {connect} = require("http2");
 // 관심상품 생성
 exports.createInterestgoods = async function (userIdx, goodsIdx) {
     try {
+        const interstGoodsRows = await interestProvider.searchInterestGoodsById(userId);
+            if(interstGoodsRows[0].goodsIdx == goodsId) {
+                return errResponse(baseResponse.REDUNDANT_GOODSID);
+            }
         
         const insertInterestGoodsParams = [userIdx, goodsIdx];
 
@@ -37,16 +41,7 @@ exports.createInterestgoods = async function (userIdx, goodsIdx) {
 exports.deleteInterestgoods = async function (userId, goodsId) {
     try {
         // ID로 회원 조회
-        const interestGoodsuserIdRows = await interestProvider.searchInterestGoodsById(userId);
-        if (interestGoodsuserIdRows.length == 0){
-            return errResponse(baseResponse.USER_USERID_NOT_EXIST);
-            }
         
-        const interstGoodsRows = await interestProvider.searchInterestGoodsBygoodsId(goodsId);
-            if(interstGoodsRows == 0) {
-                return errResponse(baseResponse.GOODS_GOODSID_NOT_EXIST);
-            }
-
         const deleteInterstGoodsParams = [userId, goodsId];
 
         const connection = await pool.getConnection(async (conn) => conn);

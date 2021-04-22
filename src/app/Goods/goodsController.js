@@ -72,17 +72,18 @@ exports.postGoodsImg = async function (req, res) {
     /**
      * Body: goodsId, fileLink
      */
-    const {goodsId, fileLink} = req.body;
+    const {goodsId} = req.body;
+    const fileLinkRows = req.body.fileLink
 
     // 빈 값 체크
     if (!goodsId)
         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
     
-    if (!fileLink)
+    if (!fileLinkRows)
         return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
 
     const goodsImgResponse = await goodsService.createGoodsImg(
-        goodsId, fileLink
+        goodsId, fileLinkRows
     );
 
     return res.send(goodsImgResponse);

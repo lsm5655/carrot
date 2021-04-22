@@ -46,13 +46,21 @@ exports.getNoticeById = async function (req, res) {
     /**
      * Path Variable: userId
      */
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const noticeByIdResult = await noticeProvider.retrieveNoticeById(userId);
-    return res.send(response(baseResponse.SUCCESS, noticeByIdResult));
-    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const noticeByIdResult = await noticeProvider.retrieveNoticeById(userId);
+        return res.send(response(baseResponse.SUCCESS, noticeByIdResult));
+    }
+
 };
 
 

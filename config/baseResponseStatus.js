@@ -71,12 +71,19 @@ module.exports = {
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
     SIGNUP_REDUNDANT_PHONENUM : { "isSuccess": false, "code": 3007, "message":"중복된 번호입니다." },
-    SIGNUP_REDUNDANT_CATEGORYNAME : { "isSuccess": false, "code": 3007, "message":"중복된 카테고리 이름입니다." },
+    SIGNUP_REDUNDANT_CATEGORYNAME : { "isSuccess": false, "code": 3008, "message":"중복된 카테고리 이름입니다." },
+    REDUNDANT_DONGNAME : { "isSuccess": false, "code": 3009, "message":"중복된 동 이름입니다." },
+    REDUNDANT_GOODSID : { "isSuccess": false, "code": 3011, "message":"중복된 상품 ID입니다." },
+    REDUNDANT_KEYWORDNAME : { "isSuccess": false, "code": 3012, "message":"중복된 키워드입니다." },
 
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },
     SIGNIN_PASSWORD_WRONG : { "isSuccess": false, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3006, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
+
+    DONGNAME_NUMBER_WRONG : { "isSuccess": false, "code": 3010, "message": "동은 2개까지 등록할수 있습니다." },
+    ISPRICEOFFER_WRONG : { "isSuccess": false, "code": 3013, "message": "가격제안 상품이 아닙니다." },
+    REVIEW_CHATTING_WRONG : { "isSuccess": false, "code": 3013, "message": "채팅방이 없는 후기입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},

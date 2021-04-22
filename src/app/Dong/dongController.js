@@ -32,35 +32,46 @@ exports.postDong = async function (req, res) {
 /**
  * API No. 7
  * API Name : 유저가 사는 동 생성 API
- * [POST] /app/activedong
+ * [POST] /app/activedong/:userId
  */
 exports.postActiveDong = async function (req, res) {
 
     /**
-     * Body: userIdx, activeRange, activeLocation
+     * Body: activeRange, activeLocation
      */
-    const {userId, range, location} = req.body;
+    const {range, location} = req.body;
 
-    // 빈 값 체크
+    // jwt - userId, path variable :userId
 
-    if (!userId)
-        return res.send(response(baseResponse.USER_USERID_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    if (!range)
-        return res.send(response(baseResponse.RANGE_EMPTY));
+    const userId = req.params.userId;
 
-    if (!location)
-    return res.send(response(baseResponse.DONGNAME_EMPTY));
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈 값 체크
+
+        if (!range)
+            return res.send(response(baseResponse.RANGE_EMPTY));
+
+        if (!location)
+        return res.send(response(baseResponse.DONGNAME_EMPTY));
 
 
-    const signUpResponse = await dongService.createActiveDong(
-        userId,
-        range,
-        location
-    );
+        const signUpResponse = await dongService.createActiveDong(
+            userId,
+            range,
+            location
+        );
 
-    return res.send(signUpResponse);
-};
+        return res.send(signUpResponse);
+        };
+    }
+    
+    
 
 
 

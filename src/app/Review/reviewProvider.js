@@ -16,3 +16,22 @@ exports.retrieveReviewById = async function (userId) {
   return reviewResult;
 };
 
+exports.reviewCheck = async function (userId) {
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  const reviewResult = await reviewDao.checkReview(connection, userId);
+
+  connection.release();
+
+  return reviewResult;
+};
+
+exports.reviewCheckBygoodsId = async function (userId, goodsId) {
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  const reviewResult = await reviewDao.checkReviewBygoodsId(connection, userId);
+
+  connection.release();
+
+  return reviewResult;
+};

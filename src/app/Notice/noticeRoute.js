@@ -6,7 +6,7 @@ module.exports = function(app){
     app.post('/app/notice', notice.postNotice);
 
     // 2. 알림 조회 API
-    app.get('/app/notice/:userId',notice.getNoticeById); 
+    app.get('/app/notice/:userId', jwtMiddleware, notice.getNoticeById); 
 
     // 3. 알림 삭제 API
     app.delete('/app/notice/:noticeId', notice.deleteNoticeById);

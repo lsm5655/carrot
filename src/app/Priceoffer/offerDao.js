@@ -51,11 +51,22 @@ async function updatePriceoffer(connection, userId, price, goodsId) {
 // 상품 삭제
 async function deletePriceoffer(connection, userId, goodsId) {
   const deletePriceofferQuery = `
-  DELETE
-  FROM price_offer
+  UPDATE price_offer
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE offer_user_index = ? and goods_index = ?;`;
   const deletePriceofferRow = await connection.query(deletePriceofferQuery, [userId, goodsId]);
   return deletePriceofferRow[0];
+}
+
+// 가격제안 여부 확인하기
+async function offercheckBygoodsID(connection, goodsId) {
+  const offercheckQuery = `
+  select isPriceOffer
+  from goods
+  where idx = ?;
+                 `;
+  const [offercheckRow] = await connection.query(offercheckQuery, goodsId);
+  return offercheckRow;
 }
 
 
@@ -64,5 +75,6 @@ module.exports = {
   selectPriceoffer,
   selectPriceofferByID,
   updatePriceoffer,
-  deletePriceoffer
+  deletePriceoffer,
+  offercheckBygoodsID
 };

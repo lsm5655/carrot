@@ -13,9 +13,16 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-//가격제안 생성
+//키워드 생성
 exports.createKeyword = async function (userId, keyword) {
     try {
+        const keywordInfoRows = await keywordProvider.retrieveKeywordById(userId);
+
+        for (var i=0; i<keywordInfoRows.length; i++){
+            if(keywordInfoRows[i].keyword_name == keyword){
+                return errResponse(baseResponse.REDUNDANT_KEYWORDNAME)
+            }
+        }
         
         const insertKeywordParams = [userId, keyword];
 
@@ -34,11 +41,11 @@ exports.createKeyword = async function (userId, keyword) {
 };
 
 
-// 가격제안 삭제
-exports.deleteKeyword = async function (keywordId) {
+// 키워드 삭제
+exports.deleteKeyword = async function (userId, keyword) {
     try {
 
-        const deleteKeywordParams = [keywordId];
+        const deleteKeywordParams = [userId, keyword];
 
         const connection = await pool.getConnection(async (conn) => conn);
 

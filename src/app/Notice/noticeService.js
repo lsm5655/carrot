@@ -33,7 +33,7 @@ exports.createNotice = async function (userId, type) {
     }
 };
 
-// 가격제안 삭제
+// 알림 삭제
 exports.deleteNotice = async function (noticeId) {
     try {
 

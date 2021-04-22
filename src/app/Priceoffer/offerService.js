@@ -16,7 +16,12 @@ const {connect} = require("http2");
 //가격제안 생성
 exports.createPriceoffer = async function (userId, price, goodsId) {
     try {
-        
+        const offercheckRows = await offerProvider.offerCheck(connection, goodsId);
+
+        if(offercheckRows[0].isPriceoffer == "NO"){
+            return errResponse(baseResponse.ISPRICEOFFER_WRONG)
+        }
+
         const insertPriceofferParams = [userId, price, goodsId];
 
         const connection = await pool.getConnection(async (conn) => conn);
@@ -53,10 +58,6 @@ exports.editPriceoffer = async function (userId, price, goodsId) {
 // 가격제안 삭제
 exports.deletePriceoffer = async function (userId, goodsId) {
     try {
-        // ID로 회원 조회
-        const priceofferRows = await offerProvider.retrievePriceofferBygoodsId(userId, goodsId);
-        if (priceofferRows.length == 0)
-            return errResponse(baseResponse.GOODS_GOODSID_NOT_EXIST);
 
         const deletePriceofferParams = [userId, goodsId];
 

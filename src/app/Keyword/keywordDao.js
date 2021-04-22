@@ -1,4 +1,4 @@
-// 가격제안 생성
+// 키워드 생성
 async function insertKeyword(connection, insertKeywordParams) {
   const insertKeywordQuery = `
         INSERT INTO keyword(user_index, keyword_name)
@@ -13,7 +13,7 @@ async function insertKeyword(connection, insertKeywordParams) {
 }
 
 
-// 가격제안 조회
+// 키워드 조회
 async function selectKeyword(connection, userId) {
   const selectKeywordQuery = `
   select nickname, keyword_name
@@ -25,12 +25,12 @@ async function selectKeyword(connection, userId) {
 }
 
 // 상품 삭제
-async function deleteKeyword(connection, keywordId) {
+async function deleteKeyword(connection, deleteKeywordParams) {
   const deleteKeywordQuery = `
-  DELETE
-  FROM keyword
-  WHERE idx = ?;`;
-  const deleteKeywordRow = await connection.query(deleteKeywordQuery, [keywordId]);
+  UPDATE keyword
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
+  WHERE user_index = ? and keyword_name = ?;`;
+  const deleteKeywordRow = await connection.query(deleteKeywordQuery, deleteKeywordParams);
   return deleteKeywordRow[0];
 }
 

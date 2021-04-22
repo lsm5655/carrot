@@ -12,7 +12,7 @@ module.exports = function(app){
     app.post('/app/category', category.postCategory);
 
     // 4. 카테고리 삭제 API
-    app.delete('/app/category/:categoryId', category.deleteCategoryByID);
+    app.put('/app/category/:categoryId', category.deleteCategoryByID);
 
     // // 5. 특정 유저 수정 API
     // app.put('/app/users/:userId', user.putUsers);

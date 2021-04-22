@@ -14,19 +14,20 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
   return insertGoodsInfoRow;
 }
 
-async function insertGoodsImgInfo(connection, goodsId, fileLink) {
+async function insertGoodsImgInfo(connection, goodsId, fileLinkRows) {
   const insertGoodsimgInfoQuery = `
         INSERT INTO goods_image(goods_idx, fileLink)
         VALUES (?, ?);
     `;
     const insertGoodsImgInfoRow = [];
 
-    insertGoodsImgInfoRow = await connection.query(
+    for (var i=0; i<fileLinkRows.length; i++){
+    insertGoodsImgInfoRow[i] = await connection.query(
       insertGoodsimgInfoQuery,
       goodsId,
-      fileLink
+      fileLinkRows[i]
     );
-
+}
 
   return insertGoodsImgInfoRow;
 }

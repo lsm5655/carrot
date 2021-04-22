@@ -51,9 +51,10 @@ async function selectInterstGoodsgoodsId(connection, goodsId) {
 
 async function deleteInterestGoods(connection, userId, goodsId) {
   const deleteInterestgoodsQuery = `
-  DELETE
-  FROM interestGoods
-  WHERE userIdx = ? and goodsIdx = ?;`;
+  UPDATE interestGoods
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
+  WHERE userIdx = ? and goodsIdx = ?;
+  `;
   const deleteCategoryRow = await connection.query(deleteInterestgoodsQuery, [userId, goodsId]);
   return deleteCategoryRow[0];
 }

@@ -3,16 +3,13 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 1. 가격제안 생성 API
-    app.post('/app/priceoffer', offer.postPriceoffer);
+    app.post('/app/priceoffer/:userId', jwtMiddleware, offer.postPriceoffer);
 
     // 2. 가격제안 조회 API
-    app.get('/app/priceoffer/:userId',offer.getPriceofferById); 
+    app.get('/app/priceoffer/:userId', jwtMiddleware, offer.getPriceofferById); 
 
-    // 3. 가격제안 수정 API
-    app.put('/app/priceoffer/:userId', offer.putPriceofferById);
-
-    // 4. 가격제안 삭제 API
-    app.delete('/app/priceoffer/:userId', offer.deletePriceofferByID);
+    // 3. 가격제안 삭제 API
+    app.put('/app/priceoffer/:userId', jwtMiddleware, offer.deletePriceofferByID);
 
 };
 

@@ -26,3 +26,14 @@ exports.retrievePriceofferBygoodsId = async function (userId, goodsId) {
 
   return priceofferResult;
 };
+
+
+exports.offerCheck = async function (goodsId) {
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  const priceofferResult = await offerDao.offercheckBygoodsID(connection, goodsId);
+
+  connection.release();
+
+  return priceofferResult;
+};

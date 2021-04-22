@@ -36,6 +36,15 @@ exports.createActiveDong = async function (userId, range, location) {
     try {
 
         const insertDongParams = [userId, range, location];
+        const dongInfoRows = await dongProvider.dongCheck(userId);
+
+        if(dongInfoRows.length == 1){
+            if(dongInfoRows[0].activeLocation == location){
+                return errResponse(baseResponse.REDUNDANT_DONGNAME)
+            }
+        } else if(dongInfoRows.length == 2) {
+            return errResponse(baseResponse.DONGNAME_NUMBER_WRONG)
+        }
 
         const connection = await pool.getConnection(async (conn) => conn);
 

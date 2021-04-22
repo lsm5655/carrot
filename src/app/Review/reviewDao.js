@@ -25,11 +25,33 @@ async function selectReview(connection, userId) {
   return reviewRow;
 }
 
+// 후기 검사
+async function checkReview(connection, userId) {
+  const checkReviewQuery = `
+  select goods_index
+  from review
+  where user_index = ?;
+                 `;
+  const [checkreviewRow] = await connection.query(checkReviewQuery, userId);
+  return checkreviewRow;
+}
+
+// 채팅방 조회
+async function checkReviewBygoodsId(connection, userId, goodsId) {
+  const checkReviewQuery = `
+  select idx
+  from chatting_room left join goods on goods.idx = chatting_room.goodsIdx
+  where chatting_room.buyerIdx = ? and goods.idx = ?;
+                 `;
+  const [checkreviewRow] = await connection.query(checkReviewQuery, userId, goodsId);
+  return checkreviewRow;
+}
+
 // 후기 삭제
 async function deleteReview(connection, reviewId) {
   const deleteReviewQuery = `
-  DELETE
-  FROM review
+  UPDATE review
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE idx = ?;`;
   const deleteReviewRow = await connection.query(deleteReviewQuery, [reviewId]);
   return deleteReviewRow[0];
@@ -39,5 +61,7 @@ async function deleteReview(connection, reviewId) {
 module.exports = {
   insertReview,
   selectReview,
-  deleteReview
+  deleteReview,
+  checkReview,
+  checkReviewBygoodsId
 };

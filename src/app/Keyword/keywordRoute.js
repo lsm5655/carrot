@@ -3,13 +3,13 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 1. 키워드 생성 API
-    app.post('/app/keyword', keyword.postKeyword);
+    app.post('/app/keyword/:userId', jwtMiddleware, keyword.postKeyword);
 
     // 2. 키워드 조회 API
-    app.get('/app/keyword/:userId',keyword.getKeywordById); 
+    app.get('/app/keyword/:userId', jwtMiddleware, keyword.getKeywordById); 
 
     // 4. 키워드 삭제 API
-    app.delete('/app/keyword/:keywordId', keyword.deleteKeywordByID);
+    app.put('/app/keyword/:userId', jwtMiddleware, keyword.deleteKeywordByID);
 
 };
 

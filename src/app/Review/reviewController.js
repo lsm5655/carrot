@@ -18,23 +18,32 @@ exports.postReview = async function (req, res) {
     /**
      * Body: userId, goodsId, content
      */
-    const {userId, goodsId, content} = req.body;
 
-    // 빈 값 체크
-    if (!userId)
-        return res.send(response(baseResponse.USER_USERID_EMPTY));
-        
-    if (!goodsId)
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
+    const userId = req.params.userId;
+    const {goodsId, content} = req.body;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈 값 체크
+        if (!goodsId)
         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
 
-    if (!content)
-            return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
+        if (!content)
+                return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
 
-    const signUpResponse = await reviewService.createReview(
-        userId, goodsId, content
-    )
+        const signUpResponse = await reviewService.createReview(
+            userId, goodsId, content
+        )
 
-    return res.send(signUpResponse);
+        return res.send(signUpResponse);
+    }
  }
 
 
@@ -49,12 +58,21 @@ exports.getReviewById = async function (req, res) {
     /**
      * Path Variable: userId
      */
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const reviewByIdResult = await reviewProvider.retrieveReviewById(userId);
-    return res.send(response(baseResponse.SUCCESS, reviewByIdResult));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const reviewByIdResult = await reviewProvider.retrieveReviewById(userId);
+        return res.send(response(baseResponse.SUCCESS, reviewByIdResult));
+    }
+    
     
 };
 
@@ -66,11 +84,24 @@ exports.getReviewById = async function (req, res) {
 
 exports.deleteReviewByID = async function (req, res) {
 
-    const reviewId = req.params.reviewId;
+    // jwt - userId, path variable :userId
 
-    if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+    const userIdFromJWT = req.verifiedToken.userId
 
-    const ReviewById = await reviewService.deleteReview(reviewId);
+    const userId = req.params.userId;
+    const goodsId = req.body.goodsId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+    if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
+   
+    const ReviewById = await reviewService.deleteReview(userId, goodsId);
     return res.send(response(baseResponse.SUCCESS, ReviewById));
+    }
+
  }
 

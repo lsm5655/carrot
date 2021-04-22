@@ -24,11 +24,23 @@ async function selectNotice(connection, userId) {
   return noticeRow;
 }
 
+// 알림 읽기 YES
+async function isReadNotice(connection, noticeId) {
+  const updateNoticeQuery = `
+  UPDATE notice
+  SET is_read = 'YES'
+  WHERE idx = ?;`;
+  const updateNoticeRow = await connection.query(updateNoticeQuery, [noticeId]);
+  return updateNoticeRow[0];
+}
+
+
+
 // 알림 삭제
 async function deleteNotice(connection, noticeId) {
   const deleteNoticeQuery = `
-  DELETE
-  FROM notice
+  UPDATE notice
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE idx = ?;`;
   const deleteNoticeRow = await connection.query(deleteNoticeQuery, [noticeId]);
   return deleteNoticeRow[0];

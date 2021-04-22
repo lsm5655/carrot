@@ -20,22 +20,32 @@ exports.postInterestgoods = async function (req, res) {
     /**
      * Body: userIdx, goodsIdx
      */
-    const {userIdx, goodsIdx} = req.body;
 
-    // 빈 값 체크
-    if (!userIdx)
-        return res.send(response(baseResponse.USER_USERID_EMPTY));
+     // jwt - userId, path variable :userId
 
-    if (!goodsIdx)
+    const userIdFromJWT = req.verifiedToken.userId
+
+    const {goodsId} = req.body;
+    const userId = req.params.userId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        // 빈 값 체크
+
+        if (!goodsId)
         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
 
+        const signUpResponse = await interestService.createInterestgoods(
+            userId,
+            goodsId
+        );
 
-    const signUpResponse = await interestService.createInterestgoods(
-        userIdx,
-        goodsIdx
-    );
-
-    return res.send(signUpResponse);
+        return res.send(signUpResponse);
+    }
+    
  }
 
 
@@ -49,12 +59,21 @@ exports.getInterestGoodsById = async function (req, res) {
     /**
      * Path Variable: userId
      */
-    const userId = req.params.userId;
+     // jwt - userId, path variable :userId
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+     const userIdFromJWT = req.verifiedToken.userId
 
-    const InterestGoodsById = await interestProvider.retrieveInterestGoodsById(userId);
-    return res.send(response(baseResponse.SUCCESS, InterestGoodsById));
+     const userId = req.params.userId;
+ 
+     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+ 
+     if (userIdFromJWT != userId) {
+         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+     } else {
+        const InterestGoodsById = await interestProvider.retrieveInterestGoodsById(userId);
+        return res.send(response(baseResponse.SUCCESS, InterestGoodsById));
+     }
+    
 };
 
 
@@ -66,13 +85,20 @@ exports.getInterestGoodsById = async function (req, res) {
 
 exports.deleteInterestGoodsByID = async function (req, res) {
 
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
     const goodsId = req.body.goodsId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-    if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY))
 
-    const interestGoodsById = await interestService.deleteInterestgoods(userId, goodsId);
-    return res.send(response(baseResponse.SUCCESS, interestGoodsById));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY))
+        const interestGoodsById = await interestService.deleteInterestgoods(userId, goodsId);
+        return res.send(response(baseResponse.SUCCESS, interestGoodsById));
+    }
+    
  }
 

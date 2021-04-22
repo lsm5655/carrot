@@ -51,8 +51,8 @@ async function insertCategoryInfo(connection, insertCategoryInfoParams) {
 
 async function deleteCategoryInfo(connection, id) {
   const deleteCategoryQuery = `
-  DELETE
-  FROM category
+  UPDATE category
+  SET status = 'DELETED', deleted_at = CURRENT_TIMESTAMP
   WHERE idx = ?;`;
   const deleteCategoryRow = await connection.query(deleteCategoryQuery, [id]);
   return deleteCategoryRow[0];
