@@ -14,23 +14,19 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
   return insertGoodsInfoRow;
 }
 
-async function insertGoodsImgInfo(connection, goodsId, fileLinkRows) {
-  const insertGoodsimgInfoQuery = `
-        INSERT INTO goods_image(goods_idx, fileLink)
+async function insertGoodsImgInfo(connection, goodsId, fileLink) {
+  const insertGoodsInfoQuery = `
+        INSERT INTO goods_image (goods_index, file)
         VALUES (?, ?);
     `;
-    const insertGoodsImgInfoRow = [];
-
-    for (var i=0; i<fileLinkRows.length; i++){
-    insertGoodsImgInfoRow[i] = await connection.query(
-      insertGoodsimgInfoQuery,
-      goodsId,
-      fileLinkRows[i]
-    );
-}
+  const insertGoodsImgInfoRow = await connection.query(
+    insertGoodsInfoQuery,
+    goodsId, fileLink
+  );
 
   return insertGoodsImgInfoRow;
 }
+
 
   // var sql = "";
   // fileLink.foreach(function(item){

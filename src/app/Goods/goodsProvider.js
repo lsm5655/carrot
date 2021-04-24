@@ -43,12 +43,21 @@ exports.retrieveGoodsListByUser = async function (userId, goodsStatus) {
 exports.retrieveGoodsById = async function (goodsId) {
   const connection = await pool.getConnection(async (conn) => conn);
   const goodsResult = await goodsDao.selectGoodsId(connection, goodsId);
+
+  connection.release();
+
+  return goodsResult;
+};
+
+exports.retrieveGoodsView = async function (goodsId) {
+  const connection = await pool.getConnection(async (conn) => conn);
   const goodsviewResult = await goodsDao.selectGoodsViewId(connection, goodsId);
 
   connection.release();
 
-  return (goodsResult+goodsviewResult);
+  return goodsviewResult;
 };
+
 
 exports.retrieveGoodsByUserId = async function (userId) {
   const connection = await pool.getConnection(async (conn) => conn);

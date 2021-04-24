@@ -8,7 +8,8 @@ const pool = mysql.createPool({
     port: '3306',
     password: 'a1s2d3f4',
     database: 'test',
-    dateStrings: 'date'
+    dateStrings: 'date',
+    multipleStatements: true
 });
 
 module.exports = {

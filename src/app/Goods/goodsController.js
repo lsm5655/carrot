@@ -72,18 +72,17 @@ exports.postGoodsImg = async function (req, res) {
     /**
      * Body: goodsId, fileLink
      */
-    const {goodsId} = req.body;
-    const fileLinkRows = req.body.fileLink
+    const {goodsId, fileLink} = req.body;
 
     // 빈 값 체크
     if (!goodsId)
         return res.send(response(baseResponse.GOODS_GOODSID_EMPTY));
     
-    if (!fileLinkRows)
+    if (!fileLink)
         return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
 
     const goodsImgResponse = await goodsService.createGoodsImg(
-        goodsId, fileLinkRows
+        goodsId, fileLink
     );
 
     return res.send(goodsImgResponse);
@@ -105,7 +104,9 @@ exports.getGoodsById = async function (req, res) {
     if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
 
     const goodsByIdResult = await goodsProvider.retrieveGoodsById(goodsId);
-    return res.json (response(baseResponse.SUCCESS, (goodsByIdResult)));
+    const goodsViewResult = await goodsProvider.retrieveGoodsView(goodsId);
+    var results = [goodsByIdResult, goodsViewResult];
+    return res.json (response(baseResponse.SUCCESS, JSON.stringify(results)));
 };
 
 /**

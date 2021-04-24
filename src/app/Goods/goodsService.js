@@ -45,10 +45,10 @@ exports.createGoodsImg = async function (goodsId, fileLink) {
     try {
 
         const connection = await pool.getConnection(async (conn) => conn);
-        const goodsIdinfo = goodsId;
-        const fileLinkinfo = fileLink;
-        console.log(JSON.stringify(fileLinkinfo));
-        const goodsResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
+
+        console.log(JSON.stringify(fileLink));
+
+        const goodsResult = await goodsDao.insertGoodsImgInfo(connection, goodsId, fileLink);
         console.log(`추가된 이미지 : ${goodsResult}`);
         connection.release();
 
