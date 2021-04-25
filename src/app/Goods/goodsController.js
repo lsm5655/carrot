@@ -105,8 +105,8 @@ exports.getGoodsById = async function (req, res) {
 
     const goodsByIdResult = await goodsProvider.retrieveGoodsById(goodsId);
     const goodsViewResult = await goodsProvider.retrieveGoodsView(goodsId);
-    var results = [goodsByIdResult, goodsViewResult];
-    return res.json (response(baseResponse.SUCCESS, JSON.stringify(results)));
+
+    return res.send(response(baseResponse.SUCCESS, [goodsByIdResult, goodsViewResult]));
 };
 
 /**

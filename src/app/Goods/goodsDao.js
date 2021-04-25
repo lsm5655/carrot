@@ -6,7 +6,7 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
         INSERT INTO goods(sellerIdx, sellerlocationIdx, categoryIdx, goodsTitle, price, isPriceOffer, content)
         VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
-  const insertGoodsInfoRow = await connection.query(
+  const [insertGoodsInfoRow] = await connection.query(
     insertGoodsInfoQuery,
     insertGoodsInfoParams
   );
@@ -16,10 +16,10 @@ async function insertGoodsInfo(connection, insertGoodsInfoParams) {
 
 async function insertGoodsImgInfo(connection, goodsId, fileLink) {
   const insertGoodsInfoQuery = `
-        INSERT INTO goods_image (goods_index, file)
-        VALUES (?, ?);
+  INSERT INTO goods_image(goods_idx, fileLink)
+  values (?, ?);
     `;
-  const insertGoodsImgInfoRow = await connection.query(
+  const [insertGoodsImgInfoRow] = await connection.query(
     insertGoodsInfoQuery,
     goodsId, fileLink
   );
@@ -56,8 +56,13 @@ from goods left join goods_image gi on goods.idx = gi.goods_idx left join user u
 WHERE goods.idx = ?;
                  `;
 
+  const selectGoodsviewIdQuery = `
+  SELECT count(GoodsView.goods_idx=?) as '조회수'
+  from GoodsView;
+                 `;
 
-   const goodsRow = await connection.query(selectGoodsIdQuery, goodsId);
+
+   const [goodsRow] = await connection.query(selectGoodsIdQuery, goodsId);
   return goodsRow;
 }
 
@@ -68,7 +73,7 @@ async function selectGoodsViewId(connection, goodsId) {
   SELECT count(GoodsView.goods_idx=?) as view
   from GoodsView;
                  `;
-  const goodsviewRow = await connection.query(selectGoodsviewIdQuery, goodsId);
+  const [goodsviewRow] = await connection.query(selectGoodsviewIdQuery, goodsId);
   return goodsviewRow;
 }
 
