@@ -119,17 +119,26 @@ exports.getGoodsById = async function (req, res) {
     /**
      * Query String: goodsStatus
      */
-    const goodsStatus = req.query.goodsStatus;
+    // const goodsStatus = req.query.goodsStatus;
+    // const pageInfo = req.query;
+    // const page = req.query.page;
+    // const pageSize = req.query.pageSize;
 
-    if (!goodsStatus) {
-        // 상품 전체 조회
-        const goodsListResult = await goodsProvider.retrieveGoodsList();
-        return res.send(response(baseResponse.SUCCESS, goodsListResult));
-    } else {
-        // 상품 판매내역에 따라 조회
-        const goodsListByGoodsStatus = await goodsProvider.retrieveGoodsList(goodsStatus);
-        return res.send(response(baseResponse.SUCCESS, goodsListByGoodsStatus));
+    const {page, pageSize} = req.query
+
+    if(!page || !pageSize){
+        return res.send(errResponse(baseResponse.GOODS_PAGE_EMPTY));
     }
+
+    // if (!goodsStatus) {
+        // 상품 전체 조회
+        const goodsListResult = await goodsProvider.retrieveGoodsList(page, pageSize);
+        return res.send(response(baseResponse.SUCCESS, goodsListResult));
+    // } else {
+    //     // 상품 판매내역에 따라 조회
+    //     const goodsListByGoodsStatus = await goodsProvider.retrieveGoodsList(goodsStatus, page, pageSize);
+    //     return res.send(response(baseResponse.SUCCESS, goodsListByGoodsStatus));
+    // }
 };
 
 /**
