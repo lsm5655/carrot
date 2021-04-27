@@ -17,16 +17,17 @@ const {connect} = require("http2");
 exports.createInterestgoods = async function (userIdx, goodsIdx) {
     try {
         const interstGoodsRows = await interestProvider.searchInterestGoodsById(userId);
-            if(interstGoodsRows[0].goodsIdx == goodsId) {
+        for(var i=0; i<interstGoodsRows.length; i++) {    
+            if(interstGoodsRows[i].goodsIdx == goodsId) {
                 return errResponse(baseResponse.REDUNDANT_GOODSID);
             }
-        
+        }
         const insertInterestGoodsParams = [userIdx, goodsIdx];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
         const InterestgoodsResult = await interestDao.insertInterestGoods(connection, insertInterestGoodsParams);
-        console.log(`추가된 회원 : ${InterestgoodsResult[0].insertId}`)
+        console.log(`추가된 관심상품 : ${InterestgoodsResult[0].insertId}`)
         connection.release();
         return response(baseResponse.SUCCESS);
 

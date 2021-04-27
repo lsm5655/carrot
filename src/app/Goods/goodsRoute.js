@@ -3,7 +3,7 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 1. 상품 생성 API
-    app.post('/app/goods', goods.postGoods);
+    app.post('/app/goods/:userId', jwtMiddleware, goods.postGoods);
 
     // 2. 특정 상품 글 조회 API
     app.get('/app/goods/:goodsId',goods.getGoodsById); 
@@ -17,7 +17,7 @@ module.exports = function(app){
     // 5. 상품 삭제 API
     app.put('/app/goods/:userId',jwtMiddleware, goods.deleteGoodsByID);
 
-    // 5. 상품 이미지 생성 API
+    // 6. 상품 이미지 생성 API
     app.post('/app/goodsimg', goods.postGoodsImg)
 };
 

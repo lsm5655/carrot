@@ -191,6 +191,8 @@ exports.patchUsers = async function (req, res) {
     const userId = req.params.userId;
     const nickname = req.body.nickname;
 
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {

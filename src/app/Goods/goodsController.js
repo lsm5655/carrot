@@ -19,7 +19,11 @@ exports.postGoods = async function (req, res) {
     /**
      * Body: userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content
      */
-    const {userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink} = req.body;
+
+    const userIdFromJWT = req.verifiedToken.userId
+
+    const userId = req.params.userId;
+    const {userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink} = req.body;
 
     // 빈 값 체크
     if (!userId)
@@ -46,19 +50,19 @@ exports.postGoods = async function (req, res) {
     if (!fileLink)
         return res.send(response(baseResponse.GOODS_FILELINK_EMPTY));
 
-    const goodsResponse = await goodsService.createGoods(
-        userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink
-    );
-
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const goodsResponse = await goodsService.createGoods(
+            userId, userlocationId, categoryId, goodsTitle, price, isPriceOffer, content, fileLink
+        );
+        return res.send(goodsResponse);
+    }
     // const goodsInfo = await goodsProvider.retrieveGoodsByUserId(userId);
     
     // const goodsImgResponse = await goodsService.createGoodsImg(
     //     goodsInfo[0].idx, fileLink
     // );
-
-
-
-    return res.send(goodsResponse);
  }
 
 /**

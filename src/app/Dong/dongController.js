@@ -116,12 +116,18 @@ exports.getDongById = async function (req, res) {
     /**
      * params : userId
      */
+    const userIdFromJWT = req.verifiedToken.userId
+
     const userId = req.params.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const activedongByUserId = await dongProvider.retrieveDong(userId);
-    return res.send(response(baseResponse.SUCCESS, activedongByUserId));
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        const activedongByUserId = await dongProvider.retrieveDong(userId);
+        return res.send(response(baseResponse.SUCCESS, activedongByUserId));
+    }
 };
 
 
@@ -146,6 +152,6 @@ exports.getDong = async function (req, res) {
     } else {
         // 동이름 검색 조회
         const dongListByName = await dongProvider.retrieveDongList(dongname);
-        return res.send(response(baseResponse.SUCCESS, userListByName));
+        return res.send(response(baseResponse.SUCCESS, dongListByName));
     }
 };

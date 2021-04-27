@@ -48,7 +48,7 @@ exports.retrieveGoodsList = async function (goodsStatus, page, pageSize) {
 
   //}
 
-  let start = 0;
+    let start = 0;
 
     if (page <= 0) {
       page = 1;
@@ -108,9 +108,9 @@ exports.retrieveGoodsByUserId = async function (userId) {
   return goodsResult;
 };
 
-exports.selectUserById = async function (userId) {
+exports.selectGoodsByuserId = async function (userId, goodsId) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const goodsResult = await goodsDao.selectuserBygoodsId(connection, userId);
+  const goodsResult = await goodsDao.selectAllGoodsIdByUser(connection, userId, goodsId);
 
   connection.release();
 

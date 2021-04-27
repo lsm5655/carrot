@@ -84,7 +84,8 @@ module.exports = {
 
     DONGNAME_NUMBER_WRONG : { "isSuccess": false, "code": 3010, "message": "동은 2개까지 등록할수 있습니다." },
     ISPRICEOFFER_WRONG : { "isSuccess": false, "code": 3013, "message": "가격제안 상품이 아닙니다." },
-    REVIEW_CHATTING_WRONG : { "isSuccess": false, "code": 3013, "message": "채팅방이 없는 후기입니다." },
+    REVIEW_CHATTING_WRONG : { "isSuccess": false, "code": 3014, "message": "채팅방이 없는 후기입니다." },
+    GOODS_WITHDRAWAL_ID : { "isSuccess": false, "code": 3015, "message": "삭제된 상품입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},

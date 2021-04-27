@@ -64,12 +64,12 @@ exports.createGoodsImg = async function (goodsId, fileLink) {
 exports.deleteGoods = async function (userId, goodsId) {
     try {
         // ID로 상품 조회
-        const goodsIdRows = await goodsProvider.selectUserById(goodsId);
-        if (goodsIdRows.length == 0){
-            return errResponse(baseResponse.GOODS_GOODSID_NOT_EXIST);}
-            else if (goodsIdRows.sellerIdx != userId){
+        const goodsIdRows = await goodsProvider.selectGoodsByuserId(userId, goodsId);
+       
+        if (goodsIdRows[0].status === "deleted"){
                 return errResponse(baseResponse.GOODS_USER_NOT_MATCH)
             }
+        
 
         const deleteGoodsInfoParams = [goodsId];
 

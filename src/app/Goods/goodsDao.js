@@ -89,6 +89,17 @@ async function selectGoodsIdByUserId(connection, userId) {
   return goodsRow;
 }
 
+async function selectAllGoodsIdByUser(connection, userId, goodsId) {
+  
+  const selectGoodsIdQuery = `
+    select goods.idx, status
+    from goods
+    where sellerIdx = ? and goods.idx = ?;
+                 `;
+  const [goodsRow] = await connection.query(selectGoodsIdQuery, userId, goodsId);
+  return goodsRow;
+}
+
 
 // 모든 상품목록 조회
 async function selectGoodsList(connection, start, end) {
@@ -225,5 +236,6 @@ module.exports = {
   checkUserBygoodsId,
   selectGoodsListByUser,
   selectGoodsStatusByUser,
-  selectGoodsCnt
+  selectGoodsCnt,
+  selectAllGoodsIdByUser
 }

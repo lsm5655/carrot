@@ -56,7 +56,7 @@ async function selectUserId(connection, userId) {
 // userId 프로필 조회
 async function selectProfile(connection, userId) {
   const selectUserIdQuery = `
-    select nickname, user.idx, score, DATE_FORMAT(created_at, '%Y.%m.%d') as '생성날짜', goodsTitle, review_content
+    select nickname, user.idx, score, DATE_FORMAT(user.created_at, '%Y.%m.%d') as '생성날짜', goodsTitle, review_content
     from goods right join user on user.idx = goods.sellerIdx
     left join review on review.goods_index = goods.idx
     where user.idx = ?;
