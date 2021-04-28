@@ -36,7 +36,7 @@ async function checkReview(connection, userId) {
   return checkreviewRow;
 }
 
-// 채팅방 조회
+// 후기 조회
 async function checkReviewBygoodsId(connection, userId, goodsId) {
   const checkReviewQuery = `
   select idx

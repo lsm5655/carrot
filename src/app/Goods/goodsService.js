@@ -23,7 +23,7 @@ exports.createGoods = async function (userId, userlocationId, categoryId, goodsT
 
         const goodsResult = await goodsDao.insertGoodsInfo(connection, insertGoodsInfoParams);
         console.log(`추가된 상품 : ${JSON.stringify(goodsResult)}`)
-        const goodsIdinfo = goodsResult[0].insertId;
+        const goodsIdinfo = goodsResult.insertId;
         const fileLinkinfo = fileLink;
         const goodsimgResult = await goodsDao.insertGoodsImgInfo(connection, goodsIdinfo, fileLinkinfo);
         await connection.commit()
@@ -46,7 +46,7 @@ exports.createGoodsImg = async function (goodsId, fileLink) {
 
         const connection = await pool.getConnection(async (conn) => conn);
 
-        console.log(JSON.stringify(fileLink));
+        console.log(goodsId, fileLink);
 
         const goodsResult = await goodsDao.insertGoodsImgInfo(connection, goodsId, fileLink);
         console.log(`추가된 이미지 : ${goodsResult}`);

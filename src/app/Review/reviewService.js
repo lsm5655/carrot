@@ -46,7 +46,7 @@ exports.createReview = async function (userId, goodsId, content) {
 };
 
 
-// 가격제안 삭제
+// 후기 삭제
 exports.deleteReview = async function (reviewId) {
     try {
 

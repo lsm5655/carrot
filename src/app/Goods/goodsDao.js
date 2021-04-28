@@ -19,12 +19,14 @@ async function insertGoodsImgInfo(connection, goodsId, fileLink) {
   INSERT INTO goods_image(goods_idx, fileLink)
   values (?, ?);
     `;
-  const [insertGoodsImgInfoRow] = await connection.query(
-    insertGoodsInfoQuery,
-    goodsId, fileLink
-  );
-
-  return insertGoodsImgInfoRow;
+    const insertGoodsImgInfoRow = [];
+  for(var i=0; i<fileLink.length; i++){
+      insertGoodsImgInfoRow[i] = await connection.query(
+        insertGoodsInfoQuery,
+        [goodsId, fileLink[i]]
+      );
+    }
+    return insertGoodsImgInfoRow;
 }
 
 
@@ -39,7 +41,7 @@ async function insertGoodsImgInfo(connection, goodsId, fileLink) {
 async function selectGoodsId(connection, goodsId) {
   
   const selectGoodsIdQuery = `
-  SELECT fileLink, nickname, activeLocation, score, goodsTitle, c.categoryname, 
+  SELECT nickname, activeLocation, score, goodsTitle, c.categoryname, 
   case
        when timestampdiff(second, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(second, goods.updated_at, now()), '초전')
        when timestampdiff(minute, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(minute, goods.updated_at, now()), '분전')
@@ -49,16 +51,11 @@ async function selectGoodsId(connection, goodsId) {
        else CONCAT(timestampdiff(year, goods.updated_at, now()) ,'년전')
        end as 수정날짜, content,
        count(distinct cr.buyerIdx) as '채팅방', count(distinct ig.userIdx) as '관심수', price, isPriceOffer
-from goods left join goods_image gi on goods.idx = gi.goods_idx left join user u on u.idx=goods.sellerIdx
+from goods left join user u on u.idx=goods.sellerIdx
     left join chatting_room cr on cr.goodsIdx = goods.idx
     left join category c on c.idx = goods.categoryIdx left join interestGoods ig on ig.goodsIdx = goods.idx
     left join activeDong ad on goods.sellerLocationIdx = ad.reference_area_index
 WHERE goods.idx = ?;
-                 `;
-
-  const selectGoodsviewIdQuery = `
-  SELECT count(GoodsView.goods_idx=?) as '조회수'
-  from GoodsView;
                  `;
 
 
@@ -75,6 +72,18 @@ async function selectGoodsViewId(connection, goodsId) {
                  `;
   const [goodsviewRow] = await connection.query(selectGoodsviewIdQuery, goodsId);
   return goodsviewRow;
+}
+
+// 상품 조회수
+async function selectGoodsFileLink(connection, goodsId) {
+  
+  const selectGoodsFilelinkQuery = `
+  select fileLink
+  from goods_image
+  where goods_idx = ?;
+                 `;
+  const [goodsFileLinkRow] = await connection.query(selectGoodsFilelinkQuery, goodsId);
+  return goodsFileLinkRow;
 }
 
 async function selectGoodsIdByUserId(connection, userId) {
@@ -104,7 +113,7 @@ async function selectAllGoodsIdByUser(connection, userId, goodsId) {
 // 모든 상품목록 조회
 async function selectGoodsList(connection, start, end) {
   const selectGoodsListQuery = `
-  select distinct goodsTitle, fileLink, goodsStatus, activeLocation, 
+  select distinct goodsTitle, fileLink, goodsStatus, activeLocation,
   case
        when timestampdiff(second, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(second, goods.updated_at, now()), '초전')
        when timestampdiff(minute, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(minute, goods.updated_at, now()), '분전')
@@ -117,6 +126,7 @@ async function selectGoodsList(connection, start, end) {
   left join chatting_room cr on goods.idx = cr.goodsIdx
   left join interestGoods ig on goods.idx = ig.goodsIdx
   left join activeDong ad on goods.sellerLocationIdx = ad.reference_area_index
+  group by goods.idx order by goods.created_at
   LIMIT ${start}, ${end};
                 `;
   const [goodsListRows] = await connection.query(selectGoodsListQuery);
@@ -128,7 +138,7 @@ async function selectGoodsList(connection, start, end) {
 // 상태로 상품목록 조회
 async function selectGoodsStatus(connection, goodsStatus, start, end) {
   const selectGoodsListQuery = `
-  select distinct goodsTitle, fileLink, goodsStatus, activeLocation, 
+  select distinct goodsTitle, fileLink, goodsStatus, activeLocation,
   case
        when timestampdiff(second, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(second, goods.updated_at, now()), '초전')
        when timestampdiff(minute, goods.updated_at, now()) < 59 then CONCAT(timestampdiff(minute, goods.updated_at, now()), '분전')
@@ -141,7 +151,8 @@ async function selectGoodsStatus(connection, goodsStatus, start, end) {
   left join chatting_room cr on goods.idx = cr.goodsIdx
   left join interestGoods ig on goods.idx = ig.goodsIdx
   left join activeDong ad on goods.sellerLocationIdx = ad.reference_area_index
-  where goodsStatus = ? LIMIT ${start}, ${end};
+  where goodsStatus = '판매중' group by goods.idx
+  order by goods.created_at asc LIMIT ${start}, ${end};
                 `;
   const [goodsStatusRows] = await connection.query(selectGoodsListQuery, goodsStatus);
   return goodsStatusRows;
@@ -237,5 +248,6 @@ module.exports = {
   selectGoodsListByUser,
   selectGoodsStatusByUser,
   selectGoodsCnt,
-  selectAllGoodsIdByUser
+  selectAllGoodsIdByUser,
+  selectGoodsFileLink
 }

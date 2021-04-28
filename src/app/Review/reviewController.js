@@ -89,7 +89,7 @@ exports.deleteReviewByID = async function (req, res) {
     const userIdFromJWT = req.verifiedToken.userId
 
     const userId = req.params.userId;
-    const goodsId = req.body.goodsId;
+    const reviewId = req.body.reviewId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
@@ -99,7 +99,7 @@ exports.deleteReviewByID = async function (req, res) {
 
     if (!goodsId) return res.send(errResponse(baseResponse.GOODS_GOODSID_EMPTY));
    
-    const ReviewById = await reviewService.deleteReview(userId, goodsId);
+    const ReviewById = await reviewService.deleteReview(reviewId);
     return res.send(response(baseResponse.SUCCESS, ReviewById));
     }
 

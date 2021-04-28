@@ -24,7 +24,7 @@ async function selectKeyword(connection, userId) {
   return keywordRow;
 }
 
-// 상품 삭제
+// 키워드 삭제
 async function deleteKeyword(connection, deleteKeywordParams) {
   const deleteKeywordQuery = `
   UPDATE keyword
