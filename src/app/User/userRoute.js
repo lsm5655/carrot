@@ -23,6 +23,15 @@ module.exports = function(app){
     // 6. 카카오 로그인 API
     app.get('/kakao/login', user.kakaoLogin);
 
+    // 7. 인증번호 생성&전송 API
+    app.post('/app/msg', user.postVerifyCode);
+
+    // 8. 인증번호 검증 API
+    app.get('/app/msg', user.authnumcheck);
+
+    // 6. 인증번호 검증 API
+    //app.get('/app/users/phonenum', user.confirmVerifyCode);
+
     // 7. 코드 API
     //app.get('/auth/oauth', user.getCode);
 

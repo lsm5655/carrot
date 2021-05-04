@@ -81,3 +81,11 @@ exports.statusCheck = async function (userId) {
 
   return statusCheckResult;
 };
+
+exports.authnumCheck = async function (phonenum) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const authnumResult = await userDao.authnumCheck(connection, phonenum);
+  connection.release();
+
+  return authnumResult;
+};

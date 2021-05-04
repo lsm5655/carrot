@@ -142,3 +142,36 @@ exports.deleteUser = async function (id) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+
+exports.createAuthnum = async function (phonenum, authnum) {
+    try {
+        // 인증번호 중복 확인
+
+        const authnumRows = await userProvider.authnumCheck(phonenum);
+        if (authnumRows.length > 0){
+            const updateAuthMsgParams = [authnum, phonenum];
+
+            const connection = await pool.getConnection(async (conn) => conn);
+
+            const authnumResult = await userDao.updateAuthnum(connection, updateAuthMsgParams);
+            console.log(`인증번호 업데이트 성공`)
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+        else {
+            const insertAuthMsgParams = [phonenum, authnum];
+
+            const connection = await pool.getConnection(async (conn) => conn);
+
+            const authnumResult = await userDao.insertAuthnum(connection, insertAuthMsgParams);
+            console.log(`인증번호 생성 성공`)
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+
+    } catch (err) {
+        logger.error(`App - createAuthnum Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};

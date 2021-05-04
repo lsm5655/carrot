@@ -124,6 +124,37 @@ async function deleteUserInfo(connection, id) {
   return deleteUserRow[0];
 }
 
+// 인증번호 조회
+async function authnumCheck(connection, phonenum) {
+  const authnumCheckQuery = `
+                SELECT authnum, timestampdiff(minute, authMsg.updated_at, now()) as 'authTime'
+                FROM authMsg
+                WHERE phonenum = ?;
+                `;
+  const [authnumRows] = await connection.query(authnumCheckQuery, phonenum);
+  return authnumRows;
+}
+
+// 인증번호 수정
+async function updateAuthnum(connection, updateAuthMsgParams) {
+  const updateAuthNumQuery = `
+    UPDATE authMsg
+    SET authnum = ?, updated_at = CURRENT_TIMESTAMP
+    WHERE phonenum = ?;
+                `;
+  const [authnumRows] = await connection.query(updateAuthNumQuery, updateAuthMsgParams);
+  return authnumRows;
+}
+
+// 인증번호 생성
+async function insertAuthnum(connection, insertAuthMsgParams) {
+  const insertAuthNumQuery = `
+    INSERT INTO authMsg(phonenum, authnum)
+    VALUES (?, ?);
+                `;
+  const [authnumRows] = await connection.query(insertAuthNumQuery, insertAuthMsgParams);
+  return authnumRows;
+}
 
 module.exports = {
   selectUser,
@@ -136,5 +167,8 @@ module.exports = {
   selectUserPhonenum,
   deleteUserInfo,
   selectStatusCheck,
-  selectProfile
+  selectProfile,
+  authnumCheck,
+  updateAuthnum,
+  insertAuthnum
 };

@@ -87,6 +87,9 @@ module.exports = {
     REVIEW_CHATTING_WRONG : { "isSuccess": false, "code": 3014, "message": "채팅방이 없는 후기입니다." },
     GOODS_WITHDRAWAL_ID : { "isSuccess": false, "code": 3015, "message": "삭제된 상품입니다." },
 
+    AUTH_AUTHNUM_WRONG : { "isSuccess": false, "code": 3016, "message": "인증번호가 일치하지 않습니다." },
+    AUTH_TIME_OVER : { "isSuccess": false, "code": 3017, "message": "인증 시간 5분을 초과했습니다." },
+
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
     SERVER_ERROR : { "isSuccess": false, "code": 4001, "message": "서버 에러"},

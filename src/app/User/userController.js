@@ -9,6 +9,11 @@ const {emit} = require("nodemon");
 var request = require("request");
 const { logger } = require("../../../config/winston");
 
+const crypto = require('crypto');
+const CryptoJS = require('crypto-js');
+const SHA256 = require('crypto-js/sha256');
+const Base64 = require('crypto-js/enc-base64');
+
 var regPhonenum =/(01[016789])([1-9]{1}[0-9]{2,3})([0-9]{4})$/;
 var regNickname= /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g; 
 
@@ -233,6 +238,114 @@ exports.kakaoLogin = async function (req, res){
         console.log(`App - kakaoLogin Query error\n: ${err}}`);
     }
 }
+
+exports.postVerifyCode = async function (req, res) {
+    var phonenum = req.body.phonenum;
+    var authnum = '';
+	var resultCode = 404;
+
+    for (let i=0; i<6; i++) {
+        authnum += parseInt(Math.random() * 10);
+    };
+
+    console.log(authnum);
+
+    if (!phonenum) return res.send(errResponse(baseResponse.SIGNUP_PHONENUM_EMPTY));
+    
+    const authByPhonenum = await userService.createAuthnum(phonenum, authnum);
+    res.send(response(baseResponse.SUCCESS, authByPhonenum));  
+
+    
+    const date = Date.now().toString();
+	const uri = 'ncp:sms:kr:266711619475:test';
+	const secretKey = 'rJRfAGWKZA73v21KZjkTM60E1ktmBew0CCtoETmY';
+	const accessKey = 'dGjcR0KwfdR8Pw5051ns';
+	const method = 'POST';
+	const space = " ";
+	const newLine = "\n";
+	const url = `https://sens.apigw.ntruss.com/sms/v2/services/${uri}/messages`;
+	const url2 = `/sms/v2/services/${uri}/messages`;
+
+	const hmac = crypto.createHmac('sha256', secretKey);
+    let mes = [];
+    mes.push(method);
+    mes.push(space);
+    mes.push(url2);
+    mes.push(newLine);
+    mes.push(date);
+    mes.push(newLine);
+    mes.push(accessKey);
+    const signature = hmac.update(mes.join('')).digest('base64');
+
+	// hmac.update(method);
+	// hmac.update(space);
+	// hmac.update(url2);
+	// hmac.update(newLine);
+	// hmac.update(date);
+	// hmac.update(newLine);
+	// hmac.update(accessKey);
+
+	// const hash = hmac.finalize();
+	// const signature = hash.toString(CryptoJS.enc.Base64);
+
+        request({
+            method : method,
+            json : true,
+            uri : url,
+            headers : {
+                'Contenc-type': 'application/json; charset=utf-8',
+                'x-ncp-iam-access-key': accessKey,
+                'x-ncp-apigw-timestamp': date,
+                'x-ncp-apigw-signature-v2': signature.toString(),
+            },
+            body : {
+                'type' : 'SMS',
+                'countryCode' : '82',
+                'from' : '01034415655',
+                'content' : `WEIVER 인증번호 ${authnum} 입니다.`,
+                'messages' : [
+                    {
+                        'to' : `${phonenum}`
+                    }
+                ]
+            }
+        }, function(err, res, html) {
+            if(err) console.log(err);
+            else {
+                resultCode = 200;
+                console.log(html);
+            }
+        });
+    
+        // res.json({
+    
+        //     'code' : resultCode
+        // });
+
+          
+};
+
+exports.authnumcheck = async function (req, res) {
+    const phonenum = req.body.phonenum;
+    const authnum = req.body.authnum;
+
+    const authnumRows = await userProvider.authnumCheck(phonenum);
+
+    console.log(minutes);
+
+    if(authnumRows[0].authTime > 5){
+        return res.send(errResponse(baseResponse.AUTH_TIME_OVER));
+    }
+
+    if(authnumRows[0].authnum != authnum) {
+        return res.send(errResponse(baseResponse.AUTH_AUTHNUM_WRONG));
+    }
+    else {
+        return res.send(response(baseResponse.SUCCESS));
+    }
+};
+
+
 
 // exports.getCode = async function(req, res) {
 //     const {code} = req.query;
