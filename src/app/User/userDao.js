@@ -156,6 +156,38 @@ async function insertAuthnum(connection, insertAuthMsgParams) {
   return authnumRows;
 }
 
+// 이메일 인증번호 조회
+async function authnumEmailCheck(connection, sendEmail) {
+  const authnumCheckQuery = `
+                SELECT authnum, timestampdiff(minute, authEmail.updated_at, now()) as 'authTime'
+                FROM authEmail
+                WHERE sendEmail = ?;
+                `;
+  const [authnumRows] = await connection.query(authnumCheckQuery, sendEmail);
+  return authnumRows;
+}
+
+// 이메일 인증번호 수정
+async function updateAuthnumEmail(connection, updateAuthEmailParams) {
+  const updateAuthNumQuery = `
+    UPDATE authEmail
+    SET authnum = ?, updated_at = CURRENT_TIMESTAMP
+    WHERE sendEmail = ?;
+                `;
+  const [authnumRows] = await connection.query(updateAuthNumQuery, updateAuthMsgParams);
+  return authnumRows;
+}
+
+// 이메일 인증번호 생성
+async function insertAuthnumEmail(connection, insertAuthMsgParams) {
+  const insertAuthNumQuery = `
+    INSERT INTO authEmail(sendEmail, authnum)
+    VALUES (?, ?);
+                `;
+  const [authnumRows] = await connection.query(insertAuthNumQuery, insertAuthMsgParams);
+  return authnumRows;
+}
+
 module.exports = {
   selectUser,
   selectUserEmail,
@@ -170,5 +202,8 @@ module.exports = {
   selectProfile,
   authnumCheck,
   updateAuthnum,
-  insertAuthnum
+  insertAuthnum,
+  authnumEmailCheck,
+  updateAuthnumEmail,
+  insertAuthnumEmail
 };

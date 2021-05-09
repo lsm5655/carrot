@@ -89,3 +89,11 @@ exports.authnumCheck = async function (phonenum) {
 
   return authnumResult;
 };
+
+exports.authnumEmailCheck = async function (sendEmail) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const authnumResult = await userDao.authnumEmailCheck(connection, sendEmail);
+  connection.release();
+
+  return authnumResult;
+};

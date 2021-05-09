@@ -3,6 +3,7 @@ const userProvider = require("../../app/User/userProvider");
 const userService = require("../../app/User/userService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
+const { smtpTransport } = require('../../../config/email');
 
 // const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
@@ -382,6 +383,62 @@ exports.pushAlarm = async function (req, res) {
         });
 };
 
+
+// 이메일 인증 API
+exports.postEmailCode = async function (req, res) {
+
+    var sendEmail = req.body.sendEmail;
+    var authnum = '';
+	var resultCode = 404;
+
+    for (let i=0; i<6; i++) {
+        authnum += parseInt(Math.random() * 10);
+    };
+
+    console.log(authnum);
+
+    if (!sendEmail) return res.send(errResponse(baseResponse.SIGNUP_PHONENUM_EMPTY));
+    
+    const authByEmail = await userService.createAuthnumEmail(sendEmail, authnum);
+    console.log(response(baseResponse.SUCCESS, authByEmail));  
+
+    const mailOptions = {
+        from: "lsm5655@naver.com",
+        to: sendEmail,
+        subject: "인증 관련 이메일 입니다",
+        text: "오른쪽 숫자 6자리를 입력해주세요 : " + authnum
+    };
+
+    const result = await smtpTransport.sendMail(mailOptions, (error, responses) => {
+        if(error) {
+            return res.send(errResponse(baseResponse.AUTH_EMAIL_FALSE))
+        }
+        else {
+            return res.send(response(baseResponse.SUCCESS));
+        }
+        
+    })
+    smtpTransport.close();
+};
+
+// 이메일 인증번호 검사 API
+exports.authnumcheckEmail = async function (req, res) {
+    const sendEmail = req.body.sendEmail;
+    const authnum = req.body.authnum;
+
+    const authnumRows = await userProvider.authnumEmailCheck(sendEmail); 
+
+    if(authnumRows[0].authTime > 5){
+        return res.send(errResponse(baseResponse.AUTH_TIME_OVER));
+    }
+
+    if(authnumRows[0].authnum != authnum) {
+        return res.send(errResponse(baseResponse.AUTH_AUTHNUM_WRONG));
+    }
+    else {
+        return res.send(response(baseResponse.SUCCESS));
+    }
+};
 
 
 // exports.getCode = async function(req, res) {

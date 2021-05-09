@@ -32,6 +32,12 @@ module.exports = function(app){
     // 9. 푸쉬알람 API
     app.get('/app/push', user.pushAlarm);
 
+    // 10. 이메일 인증 API
+    app.get('/app/email', user.postEmailCode);
+
+    // 11. 이메일 검증 API
+    app.get('/app/checkemail', user.authnumcheckEmail);
+
     // 7. 코드 API
     //app.get('/auth/oauth', user.getCode);
 

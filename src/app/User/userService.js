@@ -176,3 +176,35 @@ exports.createAuthnum = async function (phonenum, authnum) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.createAuthnumEmail = async function (sendEmail, authnum) {
+    try {
+        // 인증번호 중복 확인
+
+        const authnumRows = await userProvider.authnumEmailCheck(sendEmail);
+        if (authnumRows.length > 0){
+            const updateAuthMsgParams = [authnum, sendEmail];
+
+            const connection = await pool.getConnection(async (conn) => conn);
+
+            const authnumResult = await userDao.updateAuthnumEmail(connection, updateAuthMsgParams);
+            console.log(`인증번호 업데이트 성공`)
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+        else {
+            const insertAuthMsgParams = [sendEmail, authnum];
+
+            const connection = await pool.getConnection(async (conn) => conn);
+
+            const authnumResult = await userDao.insertAuthnumEmail(connection, insertAuthMsgParams);
+            console.log(`인증번호 생성 성공`)
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+
+    } catch (err) {
+        logger.error(`App - createAuthnum Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
