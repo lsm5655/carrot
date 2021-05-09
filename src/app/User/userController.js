@@ -17,6 +17,16 @@ const Base64 = require('crypto-js/enc-base64');
 var regPhonenum =/(01[016789])([1-9]{1}[0-9]{2,3})([0-9]{4})$/;
 var regNickname= /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g; 
 
+// push alarm
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("../../../serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 /**
  * API No. 0
  * API Name : 테스트 API
@@ -343,6 +353,33 @@ exports.authnumcheck = async function (req, res) {
     else {
         return res.send(response(baseResponse.SUCCESS));
     }
+};
+
+// 푸쉬 알람 API
+exports.pushAlarm = async function (req, res) {
+
+    const deviceToken = req.body.access_token;
+
+    
+        let message = {
+            notification:{
+                title:'테스트 발송',
+                body:'당근마켓 앱 확인해보세요!',
+            },
+            token: deviceToken,
+        }
+
+        admin
+        .messaging()
+        .send(message)
+        .then(function(response){
+            console.log('Successfully sent message::', response)
+            return res.status(200).json({success:true})
+        })
+        .catch(function(err){
+            console.log('Error Sending message!!!:', err)
+            return res.status(400).json({success:false})
+        });
 };
 
 

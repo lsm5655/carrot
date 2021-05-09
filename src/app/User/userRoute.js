@@ -29,8 +29,8 @@ module.exports = function(app){
     // 8. 인증번호 검증 API
     app.get('/app/msg', user.authnumcheck);
 
-    // 6. 인증번호 검증 API
-    //app.get('/app/users/phonenum', user.confirmVerifyCode);
+    // 9. 푸쉬알람 API
+    app.get('/app/push', user.pushAlarm);
 
     // 7. 코드 API
     //app.get('/auth/oauth', user.getCode);
